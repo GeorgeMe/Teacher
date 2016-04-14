@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="85dp"
+    android:background="@color/white"
+    android:padding="5dp">
+
+    <RelativeLayout
+        android:id="@+id/lkl"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:background="@color/colorPrimaryDark">
+
+        <ImageView
+            android:id="@+id/img_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:src="@drawable/img_head_for_empty" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/lko"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/lkl"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="龙邦"
+                    android:textSize="@dimen/small_text" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_appointed_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2016-04-06 14:20"
+                    android:textSize="@dimen/small_text" />
+
+                <TextView
+                    android:id="@+id/tv_charging"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="90￥/小时"
+                    android:textSize="@dimen/small_text" />
+
+                <TextView
+                    android:id="@+id/tv_curriculum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="初中数学"
+                    android:textSize="@dimen/small_text" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxEms="12"
+            android:singleLine="true"
+            android:text="这是我我评论怕老婆老婆论怕老婆老婆论怕老婆老婆"
+            android:textSize="@dimen/small_text" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="55dp"
+        android:layout_height="75dp"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/lko"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/tv_comment_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="好评"
+            android:textSize="@dimen/small_text" />
+    </RelativeLayout>
+</RelativeLayout>

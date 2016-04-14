@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#d2d2d2">
+    <include layout="@layout/top_view"/>
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:background="#ffffff"
+        android:layout_height="120dp">
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+            android:layout_height="80dp"
+            android:background="@drawable/wallet_border">
+            <LinearLayout
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:text="钱包余额" />
+                <TextView
+                    android:id="@+id/wallet_balance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:text="153.1￥" />
+            </LinearLayout>
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/wallet_transaction_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="交易明细" />
+    </RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:layout_marginTop="5dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已累计销售课时：" />
+
+            <TextView
+                android:id="@+id/wallet_cumulative_class"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="86小时36分钟" />
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#b7b7b7"/>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已赚取金额：" />
+
+            <TextView
+                android:id="@+id/wallet_earn_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="36425￥" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="#ffffff"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/wallet_recharge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="充值" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#b7b7b7"/>
+        <TextView
+            android:id="@+id/wallet_withdrawals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="提现" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#b7b7b7"/>
+        <TextView
+            android:id="@+id/wallet_bank_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="我的银行卡" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#b7b7b7"/>
+        <TextView
+            android:id="@+id/wallet_vouchers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="代金券" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+tools:context="com.dmd.zsb.teacher.activity.OrderActivity">
+<include layout="@layout/top_view"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"/>
+<RadioGroup
+    android:id="@+id/my_order_menu_group"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal">
+
+    <RadioButton
+        android:id="@+id/my_order_group_menu_incomplete"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:drawableTop="@drawable/radio_button_drawable_top"
+        android:drawableBottom="@drawable/radio_button_drawable_bottom"
+        android:button="@null"
+        android:text="未完成"
+        android:gravity="center"
+        android:textSize="18sp" />
+
+    <TextView
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#aea6a6" />
+
+    <RadioButton
+        android:id="@+id/my_order_group_menu_recent_completed"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:drawableTop="@drawable/radio_button_drawable_top"
+        android:drawableBottom="@drawable/radio_button_drawable_bottom"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:button="@null"
+        android:gravity="center"
+        android:text="已完成"
+        android:textSize="18sp" />
+</RadioGroup>
+<View
+    android:layout_width="match_parent"
+    android:background="#aea6a6"
+    android:layout_height="1dp"/>
+
+
+<com.dmd.tutor.widgets.XSwipeRefreshLayout
+    android:id="@+id/fragment_my_order_list_swipe_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.dmd.zsb.widgets.LoadMoreListView
+        android:id="@+id/fragment_my_order_list_list_view"
+        android:background="@color/setting_grey_bg_nor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
+        android:dividerHeight="5dp"
+        android:fadingEdge="none"
+        android:fadingEdgeLength="0dp"
+        android:listSelector="@android:color/transparent"
+        android:overScrollMode="never"
+        android:scrollbars="none"/>
+</com.dmd.tutor.widgets.XSwipeRefreshLayout>
+</LinearLayout>
+
+

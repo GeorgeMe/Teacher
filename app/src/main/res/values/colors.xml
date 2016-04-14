@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="select_item">#39BCED</color>
+
+
+    <color name="app_bg">#dfdfdf</color>
+    <color name="app_line_view_bg">#b7b7b7</color>
+
+    <color name="tab_normal_color">#666666</color>
+    <color name="tab_pressed_color">#35a5e7</color>
+
+    <color name="bar_bg_color">#097cef</color>
+    <color name="bar_text_color">#fff</color>
+
+    <color name="setting_grey_bg_nor">#F0F0F0</color>
+
+</resources>

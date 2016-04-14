@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="sort_category_list">
+        <item>综合排序</item>
+        <item>价钱 低--高</item>
+        <item>价钱 高--低</item>
+        <item>人气 高--低</item>
+        <item>距离 近--远</item>
+    </array>
+    <string-array name="shen_fen">
+        <item>在校大学生</item>
+        <item>在校老师</item>
+        <item>全职家教</item>
+        <item>研究生</item>
+        <item>名师</item>
+    </string-array>
+    <string-array name="xing_bie">
+        <item>男</item>
+        <item>女</item>
+    </string-array>
+    <string-array name="fang_shi">
+        <item>一对一</item>
+        <item>一对多</item>
+    </string-array>
+    <string-array name="hao_ping">
+        <item>60%</item>
+        <item>70%</item>
+        <item>80%</item>
+        <item>90%</item>
+    </string-array>
+    <string-array name="socialNetworks">
+        <item>Twitter</item>
+        <item>Google</item>
+        <item>Instagram</item>
+        <item>Facebook</item>
+    </string-array>
+</resources>

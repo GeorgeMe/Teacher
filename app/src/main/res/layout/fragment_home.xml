@@ -1,0 +1,87 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dmd.zsb.teacher.fragment.HomeFragment">
+    <include layout="@layout/bar_for_home"/>
+    <RadioGroup
+        android:id="@+id/seek_menu_group"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/seek_group_menu_course"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:drawableTop="@drawable/radio_button_drawable_top"
+            android:drawableBottom="@drawable/radio_button_drawable_bottom"
+            android:button="@null"
+            android:text="课程"
+            android:gravity="center"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#aea6a6" />
+        <RadioButton
+            android:id="@+id/seek_group_menu_sort"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:drawableTop="@drawable/radio_button_drawable_top"
+            android:drawableBottom="@drawable/radio_button_drawable_bottom"
+            android:button="@null"
+            android:gravity="center"
+            android:text="排序"
+            android:textSize="14sp" />
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#aea6a6" />
+
+        <RadioButton
+            android:id="@+id/seek_group_menu_audition"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:drawableTop="@drawable/radio_button_drawable_top"
+            android:drawableBottom="@drawable/radio_button_drawable_bottom"
+            android:button="@null"
+            android:gravity="center"
+            android:text="试听"
+            android:textSize="14sp" />
+    </RadioGroup>
+    <View
+        android:layout_width="match_parent"
+        android:background="#aea6a6"
+        android:layout_height="1dp"/>
+    <com.dmd.tutor.widgets.XSwipeRefreshLayout
+        android:id="@+id/fragment_home_list_swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.dmd.zsb.widgets.LoadMoreListView
+            android:id="@+id/fragment_home_list_view"
+            android:background="@color/setting_grey_bg_nor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@null"
+            android:dividerHeight="5dp"
+            android:fadingEdge="none"
+            android:fadingEdgeLength="0dp"
+            android:listSelector="@android:color/transparent"
+            android:overScrollMode="never"
+            android:scrollbars="none"/>
+    </com.dmd.tutor.widgets.XSwipeRefreshLayout>
+</LinearLayout>
