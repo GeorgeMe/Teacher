@@ -86,7 +86,7 @@ public class GradeDao {
         Log.i(TAG, "年级保存完毕");
     }
 
-    public List<GradeEntity> getGrades() {
+    public ArrayList<GradeEntity> getGrades() {
         ArrayList<GradeEntity> gradeEntities = new ArrayList<GradeEntity>();
         Cursor cursor = sqlDB.query(TableConstant.T_GRADE, null,null, null, null, null, null);
         while (cursor.moveToNext()) {
@@ -127,5 +127,17 @@ public class GradeDao {
         }
         sqlDB.setTransactionSuccessful();
         sqlDB.endTransaction();
+    }
+
+    public GradeEntity getGradeEntity(String grade_name){
+        GradeEntity gradeEntity=new GradeEntity();
+        String sql = "grade_name = '"+ grade_name+"'";
+        Cursor cursor = sqlDB.query(TableConstant.T_GRADE, null,sql, null, null, null, null);
+        while (cursor.moveToNext()) {
+            gradeEntity.setGrade_name(cursor.getString(cursor.getColumnIndex("grade_name")));
+            gradeEntity.setGrade_id(cursor.getString(cursor.getColumnIndex("grade_id")));
+        }
+        cursor.close();
+        return gradeEntity;
     }
 }

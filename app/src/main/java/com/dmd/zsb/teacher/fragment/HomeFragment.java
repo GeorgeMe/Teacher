@@ -93,6 +93,8 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                     @Override
                     public void run() {
                         JsonObject jsonObject=new JsonObject();
+                        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.addProperty("version", Constants.ZSBVERSION);
                         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
                         jsonObject.addProperty("sid",XmlDB.getInstance(mContext).getKeyString("sid","sid"));
                         jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);//每页条数
@@ -108,6 +110,8 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                 @Override
                 public void onClick(View v) {
                     JsonObject jsonObject=new JsonObject();
+                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                    jsonObject.addProperty("version", Constants.ZSBVERSION);
                     jsonObject.addProperty("uid",XmlDB.getInstance(mContext).getKeyString("uid","uid"));
                     jsonObject.addProperty("sid",XmlDB.getInstance(mContext).getKeyString("sid","sid"));
                     jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);//每页条数
@@ -268,6 +272,8 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
     public void onLoadMore() {
         page = 1 + page;
         JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("uid",XmlDB.getInstance(mContext).getKeyString("uid","uid"));
         jsonObject.addProperty("sid",XmlDB.getInstance(mContext).getKeyString("sid","sid"));
         jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);//每页条数
@@ -280,6 +286,8 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
     @Override
     public void onRefresh() {
         JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("uid",XmlDB.getInstance(mContext).getKeyString("uid","uid"));
         jsonObject.addProperty("sid",XmlDB.getInstance(mContext).getKeyString("sid","sid"));
         jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);//每页条数
@@ -321,6 +329,8 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //排序
                 JsonObject jsonObject=new JsonObject();
+                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                jsonObject.addProperty("version", Constants.ZSBVERSION);
                 jsonObject.addProperty("uid",XmlDB.getInstance(mContext).getKeyString("uid","uid"));
                 jsonObject.addProperty("sid",XmlDB.getInstance(mContext).getKeyString("sid","sid"));
                 jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);//每页条数
@@ -377,6 +387,8 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 //请求数据
                                 JsonObject jsonObject=new JsonObject();
+                                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                                jsonObject.addProperty("version", Constants.ZSBVERSION);
                                 jsonObject.addProperty("uid",XmlDB.getInstance(mContext).getKeyString("uid","uid"));
                                 jsonObject.addProperty("sid",XmlDB.getInstance(mContext).getKeyString("sid","sid"));
                                 jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);//每页条数

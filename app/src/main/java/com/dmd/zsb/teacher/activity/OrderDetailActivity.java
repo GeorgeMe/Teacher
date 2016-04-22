@@ -10,6 +10,7 @@ import com.dmd.dialog.AlertDialogWrapper;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.entity.OrderEntity;
 import com.dmd.zsb.mvp.presenter.impl.OrderDetailPresenterImpl;
 import com.dmd.zsb.mvp.view.OrderDetailView;
@@ -132,6 +133,8 @@ public class OrderDetailActivity extends BaseActivity implements OrderDetailView
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 JsonObject jsonObject = new JsonObject();
+                                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                                jsonObject.addProperty("version", Constants.ZSBVERSION);
                                 jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                                 jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                                 jsonObject.addProperty("order_status",2);

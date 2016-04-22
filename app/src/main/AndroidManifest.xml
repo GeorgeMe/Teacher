@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".activity.SignInActivity" />
+        <activity android:name=".activity.SignUpActivity" />
         <activity android:name=".activity.TransactionActivity" />
         <activity android:name=".activity.AboutUsActivity" />
         <activity android:name=".activity.BankCardActivity" />
@@ -39,7 +40,8 @@
         <activity android:name=".activity.WalletActivity" />
         <activity android:name=".activity.WithDrawalsActivity" />
         <activity android:name=".activity.OrderDetailActivity" />
-        <activity android:name=".activity.WalletTransationActivity"></activity>
+        <activity android:name=".activity.WalletTransationActivity" />
+        <activity android:name=".activity.SubjectActivity"/>
     </application>
 
 </manifest>

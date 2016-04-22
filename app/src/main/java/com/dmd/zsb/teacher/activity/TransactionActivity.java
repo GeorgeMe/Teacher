@@ -76,6 +76,8 @@ public class TransactionActivity extends BaseActivity implements TransactionView
                     @Override
                     public void run() {
                         JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.addProperty("version", Constants.ZSBVERSION);
                         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                         jsonObject.addProperty("page", page);
@@ -89,6 +91,8 @@ public class TransactionActivity extends BaseActivity implements TransactionView
                 @Override
                 public void onClick(View v) {
                     JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                    jsonObject.addProperty("version", Constants.ZSBVERSION);
                     jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                     jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                     jsonObject.addProperty("page", page);
@@ -230,6 +234,8 @@ public class TransactionActivity extends BaseActivity implements TransactionView
     public void onLoadMore() {
         page = page + 1;
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         jsonObject.addProperty("page", page);
@@ -240,6 +246,8 @@ public class TransactionActivity extends BaseActivity implements TransactionView
     @Override
     public void onRefresh() {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         jsonObject.addProperty("page", 1);

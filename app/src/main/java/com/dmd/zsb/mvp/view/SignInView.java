@@ -5,4 +5,5 @@ package com.dmd.zsb.mvp.view;
  */
 public interface SignInView extends BaseView{
     void navigateToHome();
+    void showTip(String msg);
 }

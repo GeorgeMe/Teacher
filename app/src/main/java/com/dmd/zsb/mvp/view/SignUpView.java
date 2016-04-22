@@ -5,4 +5,5 @@ package com.dmd.zsb.mvp.view;
  */
 public interface SignUpView {
     void showTip(String msg);
+    void navigateToHome();
 }

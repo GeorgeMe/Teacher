@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/fragment"
-        android:name="com.dmd.pay.ExternalFragment"
+        android:name="com.dmd.pay.fragment.ExternalFragment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         tools:layout="@layout/pay_external" />

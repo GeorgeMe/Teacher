@@ -11,6 +11,7 @@ import com.dmd.dialog.AlertDialogWrapper;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.ChangePasswordPresenterImpl;
 import com.dmd.zsb.mvp.view.ChangePasswordView;
@@ -108,6 +109,8 @@ public class ChangePasswordActivity extends BaseActivity implements ChangePasswo
                     showToast("两次密码不一致");
                 }else if (newPassword.getText().toString().equals(reNewPassword.getText().toString())){
                     JsonObject jsonObject=new JsonObject();
+                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                    jsonObject.addProperty("version", Constants.ZSBVERSION);
                     jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
                     jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
                     jsonObject.addProperty("newPassword",newPassword.getText().toString());

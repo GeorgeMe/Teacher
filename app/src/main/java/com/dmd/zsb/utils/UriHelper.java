@@ -85,6 +85,10 @@ public class UriHelper {
         return urlToString(true,ApiConstants.Urls.API_USER_MINE,json);
     }
 
+    //修改科目
+    public String changesubject(JsonObject json){
+        return urlToString(true,ApiConstants.Urls.API_USER_CHANGESUBJECT,json);
+    }
     //修改用户简介
     public String changeprofile(JsonObject json){
         return urlToString(true,ApiConstants.Urls.API_USER_CHANGEPROFILE,json);
@@ -105,9 +109,6 @@ public class UriHelper {
     public String changenickname(JsonObject json){
         return urlToString(true,ApiConstants.Urls.API_USER_CHANGENICKNAME,json);
     }
-
-
-
 
     //我的钱包
     public String mywallet(JsonObject json){

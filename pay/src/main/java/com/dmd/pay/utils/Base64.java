@@ -1,4 +1,4 @@
-package com.dmd.pay;
+package com.dmd.pay.utils;
 
 public final class Base64 {
 

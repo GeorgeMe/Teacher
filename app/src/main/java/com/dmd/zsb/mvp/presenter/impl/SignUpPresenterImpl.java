@@ -2,6 +2,7 @@ package com.dmd.zsb.mvp.presenter.impl;
 
 import android.content.Context;
 
+import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.mvp.interactor.impl.SignUpInteractorImpl;
 import com.dmd.zsb.mvp.listeners.BaseSingleLoadedListener;
 import com.dmd.zsb.mvp.presenter.SignUpPresenter;
@@ -29,7 +30,14 @@ public class SignUpPresenterImpl implements SignUpPresenter,BaseSingleLoadedList
 
     @Override
     public void onSuccess(JsonObject data) {
-
+        if (data.get("msg").getAsString().equals("fail")){
+            onError("登录失败");
+        }else {
+            XmlDB.getInstance(mContext).saveKey("uid",data.get("id").getAsString());
+            XmlDB.getInstance(mContext).saveKey("sid",data.get("sid").getAsString());
+            XmlDB.getInstance(mContext).saveKey("isLogin", true);
+            signUpView.navigateToHome();
+        }
     }
 
     @Override

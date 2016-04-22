@@ -11,6 +11,7 @@ import com.dmd.dialog.AlertDialogWrapper;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.NickNamePresenterImpl;
 import com.dmd.zsb.mvp.view.NickNameView;
@@ -98,6 +99,8 @@ public class NickNameActivity extends BaseActivity implements NickNameView{
                 break;
             case R.id.btn_save:
                 JsonObject jsonObject=new JsonObject();
+                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                jsonObject.addProperty("version", Constants.ZSBVERSION);
                 jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
                 jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
                 jsonObject.addProperty("nickname",etNickname.getText().toString());

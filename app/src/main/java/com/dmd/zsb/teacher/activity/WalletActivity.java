@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.WalletPresenterImpl;
 import com.dmd.zsb.mvp.view.WalletView;
@@ -65,6 +66,8 @@ public class WalletActivity extends BaseActivity implements WalletView{
         topBarTitle.setText("我的钱包");
         walletPresenter=new WalletPresenterImpl(this,mContext);
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         walletPresenter.onWalletInfo(jsonObject);

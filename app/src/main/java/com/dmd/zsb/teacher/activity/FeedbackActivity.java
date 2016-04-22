@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.FeedbackPresenterImpl;
 import com.dmd.zsb.mvp.view.FeedbackView;
@@ -104,11 +105,13 @@ public class FeedbackActivity extends BaseActivity implements FeedbackView {
                 finish();
                 break;
             case R.id.feedback_button:
-                JsonObject json=new JsonObject();
-                json.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
-                json.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
-                json.addProperty("feedback",feedbackEdittext.getText().toString());
-                feedbackPresenter.seedFeedback(json);
+                JsonObject jsonObject=new JsonObject();
+                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                jsonObject.addProperty("version", Constants.ZSBVERSION);
+                jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
+                jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
+                jsonObject.addProperty("feedback",feedbackEdittext.getText().toString());
+                feedbackPresenter.seedFeedback(jsonObject);
                 break;
         }
     }

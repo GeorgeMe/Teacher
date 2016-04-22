@@ -19,7 +19,10 @@ import java.util.UUID;
  */
 public class TutorApplication extends Application {
     public static TutorApplication mInstance = null;
-
+    private static Context sContext;
+    public static Context getContext(){
+        return sContext;
+    }
     public static TutorApplication getInstance() {
         return mInstance;
     }
@@ -28,6 +31,7 @@ public class TutorApplication extends Application {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        sContext=getApplicationContext();
         //项目log文件夹
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/000/";
         File storePath = new File(path);
@@ -43,6 +47,7 @@ public class TutorApplication extends Application {
         //初始化ImSDK
         OpenIMAgent im = OpenIMAgent.getInstance(this);
         im.init();
+
     }
 
     @Override

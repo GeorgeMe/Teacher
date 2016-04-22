@@ -12,6 +12,7 @@ import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.api.ApiConstants;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.entity.TransactionEntity;
 import com.dmd.zsb.mvp.presenter.impl.TransactionDetailPresenterImpl;
 import com.dmd.zsb.mvp.view.TransactionDetailView;
@@ -124,6 +125,8 @@ public class TransactionDetailActivity extends BaseActivity implements Transacti
             case R.id.btn_accept:
                 transactionDetailPresenter=new TransactionDetailPresenterImpl(mContext,this);
                 JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                jsonObject.addProperty("version", Constants.ZSBVERSION);
                 jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                 jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                 jsonObject.addProperty("oid",data.getOid());

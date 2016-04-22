@@ -8,6 +8,7 @@ import android.util.Log;
 import com.dmd.tutor.utils.StringUtils;
 import com.dmd.zsb.common.TableConstant;
 import com.dmd.zsb.db.ZSBDataBase;
+import com.dmd.zsb.entity.GradeEntity;
 import com.dmd.zsb.entity.SubjectEntity;
 
 import java.util.ArrayList;
@@ -104,5 +105,19 @@ public class SubjectDao{
         }
         cursor.close();
         return subjectEntities;
+    }
+
+    public SubjectEntity getSubjectEntity(String grade_id,String sub_name){
+        SubjectEntity subjectEntity = new SubjectEntity();
+        String sql = "grade_id = '"+ grade_id +"' and "+"sub_name = '"+ sub_name+"'";
+        Cursor cursor = sqlDB.query(TableConstant.T_SUBJECT, null,sql, null, null, null, null);
+        while (cursor.moveToNext()) {
+            subjectEntity.setSub_id(cursor.getString(cursor.getColumnIndex("sub_id")));
+            subjectEntity.setSub_img(cursor.getString(cursor.getColumnIndex("sub_img")));
+            subjectEntity.setSub_name(cursor.getString(cursor.getColumnIndex("sub_name")));
+            subjectEntity.setGrade_id(cursor.getString(cursor.getColumnIndex("grade_id")));
+        }
+        cursor.close();
+        return subjectEntity;
     }
 }

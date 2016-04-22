@@ -27,6 +27,7 @@ public class ApiConstants {
 
         public static final String API_USER_MYVOUCHERSDETAIL = "t_user_myvouchersdetail.action?";//我的代金券详情
 
+        public static final String API_USER_CHANGESUBJECT = "t_user_changesubject.action?";//修改科目
         public static final String API_USER_CHANGEAVATAR = "t_user_changeavatar.action?";//修改头像
         public static final String API_USER_CHANGEPROFILE = "t_user_changeprofile.action?";//修改信息简介
         public static final String API_USER_CHANGEPASSWORD = "t_user_changepassword.action?";//修改密码

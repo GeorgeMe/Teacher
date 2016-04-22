@@ -72,6 +72,8 @@ public class VouchersActivity extends BaseActivity implements VouchersView, Load
         topBarTitle.setText("代金券");
         vouchersPresenter = new VouchersPresenterImpl(mContext, this);
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         vouchersPresenter.onVouchers(Constants.EVENT_REFRESH_DATA, jsonObject);
@@ -152,6 +154,8 @@ public class VouchersActivity extends BaseActivity implements VouchersView, Load
     public void onLoadMore() {
         page=page+1;
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         vouchersPresenter.onVouchers(Constants.EVENT_LOAD_MORE_DATA, jsonObject);
@@ -160,6 +164,8 @@ public class VouchersActivity extends BaseActivity implements VouchersView, Load
     @Override
     public void onRefresh() {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         vouchersPresenter.onVouchers(Constants.EVENT_REFRESH_DATA, jsonObject);

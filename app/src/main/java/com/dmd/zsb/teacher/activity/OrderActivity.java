@@ -85,6 +85,8 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                     @Override
                     public void run() {
                         JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.addProperty("version", Constants.ZSBVERSION);
                         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                         jsonObject.addProperty("page", page);
@@ -105,6 +107,8 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                 @Override
                 public void onClick(View v) {
                     JsonObject jsonObject = new JsonObject();
+                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                    jsonObject.addProperty("version", Constants.ZSBVERSION);
                     jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                     jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                     jsonObject.addProperty("page", page);
@@ -263,6 +267,8 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
     public void onLoadMore() {
         page = page + 1;
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         jsonObject.addProperty("page", page);
@@ -280,6 +286,8 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
     @Override
     public void onRefresh() {
         JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
         jsonObject.addProperty("page", 1);
@@ -302,6 +310,8 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                 break;
             case R.id.my_order_group_menu_incomplete:
                 JsonObject incomplete = new JsonObject();
+                incomplete.addProperty("appkey", Constants.ZSBAPPKEY);
+                incomplete.addProperty("version", Constants.ZSBVERSION);
                 incomplete.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                 incomplete.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                 incomplete.addProperty("order_status", 1);
@@ -311,6 +321,8 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                 break;
             case R.id.my_order_group_menu_recent_completed:
                 JsonObject recent_completed = new JsonObject();
+                recent_completed.addProperty("appkey", Constants.ZSBAPPKEY);
+                recent_completed.addProperty("version", Constants.ZSBVERSION);
                 recent_completed.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                 recent_completed.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                 recent_completed.addProperty("order_status", 4);

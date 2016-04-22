@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.ProfilePresenterImpl;
 import com.dmd.zsb.mvp.view.ProfileView;
@@ -98,6 +99,8 @@ public class BriefActivity extends BaseActivity implements ProfileView {
                 break;
             case R.id.btn_save:
                 JsonObject jsonObject=new JsonObject();
+                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+                jsonObject.addProperty("version", Constants.ZSBVERSION);
                 jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
                 jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
                 jsonObject.addProperty("brief",etBrief.getText().toString());

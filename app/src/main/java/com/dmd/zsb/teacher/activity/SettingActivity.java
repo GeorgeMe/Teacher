@@ -18,21 +18,23 @@ import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.OnUploadProcessListener;
 import com.dmd.tutor.utils.XmlDB;
-import com.dmd.zsb.teacher.R;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.mvp.presenter.impl.SettingPresenterImpl;
 import com.dmd.zsb.mvp.view.SettingView;
+import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
 import com.google.gson.JsonObject;
 
 import java.io.File;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingActivity extends BaseActivity implements SettingView,OnUploadProcessListener{
+public class SettingActivity extends BaseActivity implements SettingView, OnUploadProcessListener {
 
-    private final static int ACTION_PHOTOGRAPH=1;
-    private final static int ACTION_ALBUM=2;
+    private final static int ACTION_PHOTOGRAPH = 1;
+    private final static int ACTION_ALBUM = 2;
 
     @Bind(R.id.top_bar_back)
     TextView topBarBack;
@@ -54,10 +56,13 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
     TextView tvSettingAboutUs;
     @Bind(R.id.btn_sign_out)
     Button btnSignOut;
+    @Bind(R.id.tv_setting_subjects)
+    TextView tvSettingSubjects;
     private SettingPresenterImpl settingPresenter;
     private MaterialDialog dialog;
     private File file = null;
-    private String picturePath=null;
+    private String picturePath = null;
+
     @Override
     protected void getBundleExtras(Bundle extras) {
 
@@ -80,7 +85,7 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
 
     @Override
     protected void initViewsAndEvents() {
-        settingPresenter=new SettingPresenterImpl(SettingActivity.this,this,this);
+        settingPresenter = new SettingPresenterImpl(SettingActivity.this, this, this);
         topBarTitle.setText(getResources().getText(R.string.setting_title));
     }
 
@@ -129,22 +134,24 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
             file = new File(picturePath);
             if (file != null && file.exists()) {
 
-                JsonObject jsonObject=new JsonObject();
-                JsonObject json=new JsonObject();
-                json.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
-                json.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
+                JsonObject jsonObject = new JsonObject();
+                JsonObject json = new JsonObject();
+                json.addProperty("appkey", Constants.ZSBAPPKEY);
+                json.addProperty("version", Constants.ZSBVERSION);
+                json.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+                json.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
                 json.addProperty("fileName", file.getName());
                 json.addProperty("fileMime", "image/png");
 
-                JsonObject formFile=new JsonObject();
-                formFile.addProperty("fileName",file.getName());
-                formFile.addProperty("filePath",file.getAbsolutePath());
-                formFile.addProperty("parameterName","file");
-                formFile.addProperty("contentType","application/octet-stream");
+                JsonObject formFile = new JsonObject();
+                formFile.addProperty("fileName", file.getName());
+                formFile.addProperty("filePath", file.getAbsolutePath());
+                formFile.addProperty("parameterName", "file");
+                formFile.addProperty("contentType", "application/octet-stream");
 
-                jsonObject.add("json",json);
-                jsonObject.add("formFile",formFile);
-                settingPresenter.uploadAvatar(1,jsonObject);
+                jsonObject.add("json", json);
+                jsonObject.add("formFile", formFile);
+                settingPresenter.uploadAvatar(1, jsonObject);
             } else {
                 Message msg = Message.obtain();
                 msg.what = 3;
@@ -155,7 +162,7 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
         }
     }
 
-    @OnClick({R.id.top_bar_back, R.id.tv_setting_nickname, R.id.tv_setting_avatar, R.id.tv_setting_signature, R.id.tv_setting_brief, R.id.tv_setting_change_password, R.id.tv_setting_feedback, R.id.tv_setting_about_us, R.id.btn_sign_out})
+    @OnClick({R.id.top_bar_back,R.id.tv_setting_subjects, R.id.tv_setting_nickname, R.id.tv_setting_avatar, R.id.tv_setting_signature, R.id.tv_setting_brief, R.id.tv_setting_change_password, R.id.tv_setting_feedback, R.id.tv_setting_about_us, R.id.btn_sign_out})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.top_bar_back:
@@ -163,6 +170,9 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
                 break;
             case R.id.tv_setting_nickname:
                 readyGo(NickNameActivity.class);
+                break;
+            case R.id.tv_setting_subjects:
+                readyGo(SubjectActivity.class);
                 break;
             case R.id.tv_setting_avatar:
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -184,10 +194,12 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
                 readyGo(AboutUsActivity.class);
                 break;
             case R.id.btn_sign_out:
-                JsonObject json=new JsonObject();
-                json.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
-                json.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
-                settingPresenter.onSignOut(1,json);
+                JsonObject json = new JsonObject();
+                json.addProperty("appkey", Constants.ZSBAPPKEY);
+                json.addProperty("version", Constants.ZSBVERSION);
+                json.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+                json.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+                settingPresenter.onSignOut(1, json);
                 break;
         }
     }
@@ -229,13 +241,14 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
     }
 
     private Handler handler = new Handler() {
-        private  int length=0;
+        private int length = 0;
+
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1://开始打开进度对话框
-                    length=msg.arg1;
-                    dialog= new MaterialDialog.Builder(SettingActivity.this)
+                    length = msg.arg1;
+                    dialog = new MaterialDialog.Builder(SettingActivity.this)
                             .title("上传进度")
                             .content("请稍后...")
                             .contentGravity(GravityEnum.CENTER)
@@ -254,8 +267,8 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
                             }).show();
                     break;
                 case 2://进度
-                    int i=msg.arg1*100/length;
-                    if(i%10==0){
+                    int i = msg.arg1 * 100 / length;
+                    if (i % 10 == 0) {
                         dialog.setProgress(i);
                     }
                     break;
@@ -275,9 +288,10 @@ public class SettingActivity extends BaseActivity implements SettingView,OnUploa
                         }
                     }
                     dialog.dismiss();
-                    dialog=null;
+                    dialog = null;
                     break;
             }
         }
     };
+
 }

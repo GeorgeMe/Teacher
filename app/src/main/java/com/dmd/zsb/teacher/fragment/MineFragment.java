@@ -13,6 +13,7 @@ import com.dmd.dialog.MaterialDialog;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.api.ApiConstants;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.mvp.presenter.impl.MinePresenterImpl;
 import com.dmd.zsb.mvp.view.MineView;
 import com.dmd.zsb.teacher.R;
@@ -113,6 +114,8 @@ public class MineFragment extends BaseFragment implements MineView{
         }
         minePresenter=new MinePresenterImpl(mContext,this);
         JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
+        jsonObject.addProperty("version", Constants.ZSBVERSION);
         jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
         jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
         minePresenter.onMine(jsonObject);
