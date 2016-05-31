@@ -1,27 +1,25 @@
 package com.dmd.tutor.lbs;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.dmd.tutor.R;
+import com.dmd.tutor.utils.TLog;
 import com.dmd.tutor.utils.XmlDB;
 
-public  class LocationManager implements BDLocationListener
-{
+public class LocationManager implements BDLocationListener {
     public LocationClient mLocationClient = null;
     private static LocationManager Instance;
-    private static double          latitude = 0; //经度
-    private static double          longitude = 0; //纬度
+    private static double latitude = 0; //经度
+    private static double longitude = 0; //纬度
 
     public static Context context;
 
 
-    public LocationManager(Context context)
-    {
+    public LocationManager(Context context) {
         LocationManager.context = context;
         latitude = XmlDB.getInstance(context).getKeyFloatValue("latitude", 0);
         longitude = XmlDB.getInstance(context).getKeyFloatValue("longitude", 0);
@@ -31,8 +29,8 @@ public  class LocationManager implements BDLocationListener
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);//设置定位模式
         option.setCoorType("bd09ll");//返回的定位结果是百度经纬度，默认值gcj02
-        int span=1000;
-        option.setScanSpan(span*60);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        int span = 1000;
+        option.setScanSpan(span * 60);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
         option.setIsNeedAddress(true);//返回的定位结果包含地址信息
         option.setNeedDeviceDirect(false);//返回的定位结果包含手机机头的方向
         option.setOpenGps(true);//可选，默认false,设置是否使用gps
@@ -49,27 +47,23 @@ public  class LocationManager implements BDLocationListener
 
     }
 
-    public static LocationManager getInstance()
-    {
+    public static LocationManager getInstance() {
         return Instance;
     }
 
-    public void refreshLocation()
-    {
-       // mLocationClient.requestOfflineLocation();离线定位
+    public void refreshLocation() {
+        // mLocationClient.requestOfflineLocation();离线定位
         mLocationClient.requestLocation();
     }
 
-    public BDLocation getLocation()
-    {
+    public BDLocation getLocationClient() {
         return mLocationClient.getLastKnownLocation();
     }
 
     @Override
-    public void onReceiveLocation(BDLocation bdLocation)
-    {
+    public void onReceiveLocation(BDLocation bdLocation) {
         if (bdLocation == null)
-            return ;
+            return;
         StringBuffer sb = new StringBuffer(256);
         sb.append("time : ");
         sb.append(bdLocation.getTime());
@@ -81,19 +75,19 @@ public  class LocationManager implements BDLocationListener
         sb.append(bdLocation.getLongitude());
         sb.append("\nradius : ");
         sb.append(bdLocation.getRadius());
-        if (bdLocation.getLocType() == BDLocation.TypeGpsLocation){
+        if (bdLocation.getLocType() == BDLocation.TypeGpsLocation) {
             sb.append("\ngetCityCode : ");
             sb.append(bdLocation.getCityCode());
             sb.append("\nspeed : ");
             sb.append(bdLocation.getSpeed());
             sb.append("\nsatellite : ");
             sb.append(bdLocation.getSatelliteNumber());
-            String loc=(bdLocation.getCity()==null? "" : bdLocation.getCity() )+(bdLocation.getDistrict()==null? "" : bdLocation.getDistrict());
-            XmlDB.getInstance(context).saveKey("BDLocation",loc.trim().length()==0? "定位失败":loc);
-            XmlDB.getInstance(context).saveKey("addr",bdLocation.getAddrStr());
-        } else if (bdLocation.getLocType() == BDLocation.TypeNetWorkLocation){
-            String loc=(bdLocation.getCity()==null? "" : bdLocation.getCity() )+(bdLocation.getDistrict()==null? "" : bdLocation.getDistrict());
-            XmlDB.getInstance(context).saveKey("BDLocation",loc.trim().length()==0? "定位失败":loc);
+            String loc = (bdLocation.getCity() == null ? "" : bdLocation.getCity()) + (bdLocation.getDistrict() == null ? "" : bdLocation.getDistrict());
+            XmlDB.getInstance(context).saveKey("BDLocation", loc.trim().length() == 0 ? "定位失败" : loc);
+            XmlDB.getInstance(context).saveKey("addr", bdLocation.getAddrStr());
+        } else if (bdLocation.getLocType() == BDLocation.TypeNetWorkLocation) {
+            String loc = (bdLocation.getCity() == null ? "" : bdLocation.getCity()) + (bdLocation.getDistrict() == null ? "" : bdLocation.getDistrict());
+            XmlDB.getInstance(context).saveKey("BDLocation", loc.trim().length() == 0 ? "定位失败" : loc);
             sb.append("\ngetCityCode : ");
             sb.append(bdLocation.getCityCode());
             sb.append("\ngetCity : ");
@@ -102,52 +96,44 @@ public  class LocationManager implements BDLocationListener
             sb.append(bdLocation.getDistrict());
             sb.append("\naddr : ");
             sb.append(bdLocation.getAddrStr());
-            XmlDB.getInstance(context).saveKey("addr",bdLocation.getAddrStr());
+            XmlDB.getInstance(context).saveKey("addr", bdLocation.getAddrStr());
 
         }
 
         latitude = bdLocation.getLatitude();
         longitude = bdLocation.getLongitude();
-        
-        if (latitude > 1 && longitude > 1)
-        {
+
+        if (latitude > 1 && longitude > 1) {
             XmlDB.getInstance(context).saveKey("latitude", (float) latitude);
             XmlDB.getInstance(context).saveKey("longitude", (float) longitude);
-        }
-        else
-        {
-            if (mLocationClient.isStarted())
-            {
-
-                int result =mLocationClient.requestOfflineLocation();
-                Log.d("LocSDK3", "result:" + result);
-
+        } else {
+            if (mLocationClient.isStarted()) {
+                int result = mLocationClient.requestOfflineLocation();
+                TLog.d("LocSDK3", "result:" + result);
+            } else {
+                TLog.d("LocSDK3", "locClient is null or not started");
             }
-            else
-            {
-               Log.d("LocSDK3", "locClient is null or not started");
-            }
-
         }
-        Log.e("location", sb.toString());
+        TLog.e("location", sb.toString());
     }
 
-    
-    public static String getLocation(double lat, double lon) {
+
+    public static String getDistance(double lat, double lon) {
         String loc = null;
         double s = gps2m(getLatitude(), getLongitude(), lat, lon);
-        if(s > 1000) {
+        if (s > 1000) {
             s = s / 1000.0;
-            s = Math.ceil(s * 100+.5)/100;
+            s = Math.ceil(s * 100 + .5) / 100;
             loc = s + context.getString(R.string.kilometre);
         } else {
-            s = Math.ceil(s * 100+.5)/100;
+            s = Math.ceil(s * 100 + .5) / 100;
             loc = s + context.getString(R.string.meter);
         }
         return loc;
     }
-    
+
     public static final double EARTH_RADIUS = 6378137.0;
+
     public static double gps2m(double lat_a, double lng_a, double lat_b, double lng_b) {
         double radLat1 = (lat_a * Math.PI / 180.0);
         double radLat2 = (lat_b * Math.PI / 180.0);
@@ -161,18 +147,22 @@ public  class LocationManager implements BDLocationListener
         return s;
     }
 
-    public void destory()
-    {
+    public void destory() {
         mLocationClient.stop();
     }
-    
+
+    public static String getLocationAddr() {
+        return XmlDB.getInstance(context).getKeyString("location", "");
+    }
+
     public static double getLatitude() {
-    latitude = XmlDB.getInstance(context).getKeyFloatValue("latitude", 0);
-    return latitude;
-    } 
+        latitude = XmlDB.getInstance(context).getKeyFloatValue("latitude", 0);
+        return latitude;
+    }
+
     public static double getLongitude() {
-    longitude =XmlDB.getInstance(context).getKeyFloatValue("longitude", 0);
-    return longitude;
-    } 
-    
+        longitude = XmlDB.getInstance(context).getKeyFloatValue("longitude", 0);
+        return longitude;
+    }
+
 }

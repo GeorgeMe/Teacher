@@ -4,30 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.dmd.zsb.teacher.activity.SettingActivity">
+    tools:context=".activity.SettingActivity">
     <include layout="@layout/top_view" />
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/tv_setting_subjects"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="擅长科目"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
-        <View
-            android:background="@color/app_line_view_bg"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-
         <TextView
             android:id="@+id/tv_setting_nickname"
             android:layout_width="fill_parent"
@@ -37,10 +19,8 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="@string/nickname"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="@string/nickname"/>
         <View
             android:background="@color/app_line_view_bg"
             android:layout_width="match_parent"
@@ -54,10 +34,8 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="@string/avatar"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="@string/avatar"/>
        <View
             android:background="@color/app_line_view_bg"
             android:layout_width="match_parent"
@@ -71,10 +49,8 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="@string/signature"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="@string/signature" />
        <View
             android:background="@color/app_line_view_bg"
             android:layout_width="match_parent"
@@ -88,10 +64,8 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="@string/brief"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="@string/brief"/>
        <View
             android:background="@color/app_line_view_bg"
             android:layout_width="match_parent"
@@ -105,10 +79,8 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="@string/changepassword"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="@string/changepassword" />
        <View
             android:background="@color/app_line_view_bg"
             android:layout_width="match_parent"
@@ -122,41 +94,24 @@
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="@string/feedback"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
+            android:drawableRight="@drawable/list_telescopic_more"
+            android:text="@string/feedback" />
        <View
             android:background="@color/app_line_view_bg"
             android:layout_width="match_parent"
             android:layout_height="1dp"/>
-        <TextView
-            android:id="@+id/tv_setting_about_us"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:gravity="center|left"
-            android:drawableRight="@drawable/btn_forward_normal"
-            android:text="@string/aboutus"
-            android:textColor="@color/alpha_95_black"
-            android:textSize="@dimen/big_medium_text" />
-        <View
-            android:background="@color/app_line_view_bg"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-        <Button
-            android:id="@+id/btn_sign_out"
-            android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/c1_apply_btn_select"
-            android:gravity="center"
-            android:text="@string/exit"
-            android:textColor="#ffffff" />
+
+
     </LinearLayout>
+    <Button
+        android:id="@+id/btn_sign_out"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/c1_apply_btn_select"
+        android:gravity="center"
+        android:text="@string/exit"
+        android:textColor="#ffffff" />
 </LinearLayout>

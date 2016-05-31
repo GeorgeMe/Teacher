@@ -3,9 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-
     <color name="select_item">#39BCED</color>
 
+    <drawable name="color_b">#f1f1f1</drawable>
+    <drawable name="color_a">#00000000</drawable>
 
     <color name="app_bg">#dfdfdf</color>
     <color name="app_line_view_bg">#b7b7b7</color>
@@ -17,5 +18,8 @@
     <color name="bar_text_color">#fff</color>
 
     <color name="setting_grey_bg_nor">#F0F0F0</color>
+
+    <drawable name="img_selected">#44aaaaaa</drawable>
+    <drawable name="img_defaul">#00000000</drawable>
 
 </resources>

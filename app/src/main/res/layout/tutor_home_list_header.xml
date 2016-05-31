@@ -11,4 +11,11 @@
         android:layout_height="180dp"
         app:rollviewpager_hint_mode="point"
         app:rollviewpager_play_delay="3000"/>
+    <com.dmd.tutor.ninelayout.NineGridlayout
+        android:layout_marginTop="5dp"
+        android:id="@+id/fragment_home_list_header_nine_grid_layout"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="1dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" />
 </LinearLayout>

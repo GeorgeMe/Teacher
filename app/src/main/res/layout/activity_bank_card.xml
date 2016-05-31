@@ -1,22 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="#dfdfdf"
-android:orientation="vertical"
-tools:context="com.dmd.zsb.teacher.activity.BankCardActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#dfdfdf"
+    android:orientation="vertical"
+    tools:context=".activity.BankCardActivity">
 
-<include layout="@layout/top_view" />
+    <include layout="@layout/top_view" />
+
     <RelativeLayout
+        android:id="@+id/rl_none_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center_horizontal"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="您还没有添加银行卡哦" />
+
+        <Button
+            android:id="@+id/add_bank_card"
+            android:layout_width="fill_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="20dp"
+            android:background="@drawable/c1_apply_btn_select"
+            android:text="现在去添加银行卡"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rl_add_card"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        >
+        android:layout_height="fill_parent">
 
         <LinearLayout
+            android:id="@+id/ll_002"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/feed_item_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="持卡人"
+                        android:textColor="#666666"
+                        android:textSize="16dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#cccccccc" />
+
+                <EditText
+                    android:id="@+id/et_cardholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical|right"
+                    android:hint="输入持卡本人姓名"
+                    android:singleLine="true"
+                    android:textColor="#333333"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -33,75 +107,86 @@ tools:context="com.dmd.zsb.teacher.activity.BankCardActivity">
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:gravity="center"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/older_password"
+                        android:gravity="center"
+                        android:text="银行卡号"
                         android:textColor="#666666"
-                        android:textSize="16dp"/>
+                        android:textSize="16dp" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="#cccccccc"/>
+                    android:background="#cccccccc" />
 
                 <EditText
-                    android:id="@+id/now_password"
+                    android:id="@+id/input_bank_card"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="5dp"
+                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:hint="@string/input_old_password"
+                    android:maxLength="19"
+                    android:inputType="number"
                     android:gravity="center_vertical|right"
-                    android:inputType="textPassword"
-                    android:layout_marginRight="20dp"
+                    android:hint="输入银行卡号"
                     android:singleLine="true"
                     android:textColor="#333333"
-                    android:textSize="16dp"/>
+                    android:textSize="16dp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="50dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/feed_item_bg"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-                <LinearLayout
-                    android:layout_width="95dp"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="@string/new_password"
-                        android:textColor="#666666"
-                        android:textSize="16dp"/>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="#cccccccc"/>
-
         </LinearLayout>
-</LinearLayout>
-
         <Button
-            android:id="@+id/save"
+            android:layout_below="@+id/ll_002"
+            android:id="@+id/save_bank_card"
             android:layout_width="fill_parent"
             android:layout_height="55dp"
             android:layout_margin="20dp"
             android:background="@drawable/c1_apply_btn_select"
-            android:layout_alignParentBottom="true"
             android:text="@string/save"
             android:textColor="#ffffff"
-            android:textSize="20dp"/>
+            android:textSize="20dp" />
+
     </RelativeLayout>
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/rl_change_card"
+        android:layout_margin="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/ll_001"
+            android:background="@drawable/feed_item_bg"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已绑定卡号：" />
+            <TextView
+                android:id="@+id/bound_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="622844824568721"/>
+        </LinearLayout>
+        <Button
+            android:layout_below="@+id/ll_001"
+            android:id="@+id/change_bank_card"
+            android:layout_width="fill_parent"
+            android:layout_height="55dp"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/c1_apply_btn_select"
+            android:text="修改银行卡"
+            android:textColor="#ffffff"
+            android:textSize="20dp" />
+    </RelativeLayout>
+
 </LinearLayout>
 

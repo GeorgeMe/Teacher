@@ -8,6 +8,9 @@ import com.dmd.tutor.viewpagerindicator.CirclePageIndicator;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.adapter.LeadAdapter;
 
+/**
+ * app引导
+ */
 public class LeadActivity extends Activity {
     private ViewPager leadViewPager;
     private CirclePageIndicator indicator;

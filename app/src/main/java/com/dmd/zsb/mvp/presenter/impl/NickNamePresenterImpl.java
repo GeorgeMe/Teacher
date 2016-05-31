@@ -6,12 +6,16 @@ import com.dmd.zsb.mvp.interactor.impl.NickNameInteractorImpl;
 import com.dmd.zsb.mvp.listeners.BaseSingleLoadedListener;
 import com.dmd.zsb.mvp.presenter.NickNamePresenter;
 import com.dmd.zsb.mvp.view.NickNameView;
-import com.google.gson.JsonObject;
+import com.dmd.zsb.protocol.request.nicknameRequest;
+import com.dmd.zsb.protocol.response.nicknameResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2016/3/28.
  */
-public class NickNamePresenterImpl implements NickNamePresenter,BaseSingleLoadedListener<JsonObject> {
+public class NickNamePresenterImpl implements NickNamePresenter,BaseSingleLoadedListener<nicknameResponse> {
     private NickNameInteractorImpl nickNameInteractor;
     private Context mContext;
     private NickNameView nickNameView;
@@ -23,17 +27,26 @@ public class NickNamePresenterImpl implements NickNamePresenter,BaseSingleLoaded
     }
 
     @Override
-    public void updateNickName(JsonObject jsonObject) {
-        nickNameInteractor.getCommonSingleData(jsonObject);
+    public void updateNickName(JSONObject jsonObject) {
+        nickNameView.showLoading(null);
+        nicknameRequest request=new nicknameRequest();
+        try {
+            request.fromJson(jsonObject);
+            nickNameInteractor.getCommonSingleData(request.toJson());
+        }catch (JSONException j){
+
+        }
     }
 
     @Override
-    public void onSuccess(JsonObject data) {
+    public void onSuccess(nicknameResponse response) {
+        nickNameView.hideLoading();
         nickNameView.toSettingView();
     }
 
     @Override
     public void onError(String msg) {
+        nickNameView.hideLoading();
         nickNameView.showTip(msg);
     }
 

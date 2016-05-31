@@ -5,7 +5,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -14,20 +13,23 @@ import com.dmd.tutor.adapter.ListViewDataAdapter;
 import com.dmd.tutor.adapter.ViewHolderBase;
 import com.dmd.tutor.adapter.ViewHolderCreator;
 import com.dmd.tutor.eventbus.EventCenter;
+import com.dmd.tutor.lbs.LocationManager;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.tutor.widgets.XSwipeRefreshLayout;
-import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.api.ApiConstants;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.entity.OrderEntity;
-import com.dmd.zsb.entity.response.OrderResponse;
 import com.dmd.zsb.mvp.presenter.impl.OrderPresenterImpl;
 import com.dmd.zsb.mvp.view.OrderView;
+import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
+import com.dmd.zsb.protocol.response.orderResponse;
+import com.dmd.zsb.protocol.table.OrdersBean;
+import com.dmd.zsb.utils.UriHelper;
 import com.dmd.zsb.widgets.LoadMoreListView;
-import com.google.gson.JsonObject;
-import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,7 +53,7 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
     TextView topBarTitle;
 
     private OrderPresenterImpl orderPresenter;
-    private ListViewDataAdapter<OrderEntity> mListViewAdapter;
+    private ListViewDataAdapter<OrdersBean> mListViewAdapter;
     private int page = 1;
 
     @Override
@@ -84,20 +86,23 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                 fragmentMyOrderListSwipeLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                        jsonObject.addProperty("version", Constants.ZSBVERSION);
-                        jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-                        jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                        jsonObject.addProperty("page", page);
-                        jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);
-                        if (myOrderGroupMenuIncomplete.isChecked()) {
-                            jsonObject.addProperty("order_status", 1);
-                        } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
-                            jsonObject.addProperty("order_status", 4);
-                        } else {
-                            jsonObject.addProperty("order_status", 1);
+                        JSONObject jsonObject=new JSONObject();
+                        try {
+                            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                            jsonObject.put("version", Constants.ZSBVERSION);
+                            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+                            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+                            jsonObject.put("page", page);
+                            jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
+                            if (myOrderGroupMenuIncomplete.isChecked()) {
+                                jsonObject.put("order_status", 2);
+                            } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
+                                jsonObject.put("order_status", 3);
+                            }
+                        }catch (JSONException j){
+
                         }
+
                         orderPresenter.onOrder(Constants.EVENT_REFRESH_DATA, jsonObject);
                     }
                 }, ApiConstants.Integers.PAGE_LAZY_LOAD_DELAY_TIME_MS);
@@ -106,67 +111,64 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
             toggleNetworkError(true, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                    jsonObject.addProperty("version", Constants.ZSBVERSION);
-                    jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-                    jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                    jsonObject.addProperty("page", page);
-                    jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);
-                    if (myOrderGroupMenuIncomplete.isChecked()) {
-                        jsonObject.addProperty("order_status", 1);
-                    } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
-                        jsonObject.addProperty("order_status", 4);
-                    } else {
-                        jsonObject.addProperty("order_status", 1);
+                    JSONObject jsonObject=new JSONObject();
+                    try {
+                        jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.put("version", Constants.ZSBVERSION);
+                        jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+                        jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+                        jsonObject.put("page", page);
+                        jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
+                        if (myOrderGroupMenuIncomplete.isChecked()) {
+                            jsonObject.put("order_status", 2);
+                        } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
+                            jsonObject.put("order_status", 3);
+                        }
+                    }catch (JSONException j){
+
                     }
+
                     orderPresenter.onOrder(Constants.EVENT_REFRESH_DATA, jsonObject);
                 }
             });
         }
-        mListViewAdapter = new ListViewDataAdapter<OrderEntity>(new ViewHolderCreator<OrderEntity>() {
+        mListViewAdapter = new ListViewDataAdapter<OrdersBean>(new ViewHolderCreator<OrdersBean>() {
             @Override
-            public ViewHolderBase<OrderEntity> createViewHolder(int position) {
-                return new ViewHolderBase<OrderEntity>() {
-                    ImageView img_header;
-                    TextView tv_name, tv_type, tv_sex, tv_appointed_time, tv_charging, tv_curriculum, tv_address, tv_place, tv_state;
-
+            public ViewHolderBase<OrdersBean> createViewHolder(int position) {
+                return new ViewHolderBase<OrdersBean>() {
+                    TextView tv_oid, tv_created_at, tv_appointment_time, tv_subject, tv_text, tv_receiver_id, tv_distance, tv_location,tv_order_status,tv_offer_price;
                     @Override
                     public View createView(LayoutInflater layoutInflater) {
                         View view = layoutInflater.inflate(R.layout.order_list_item, null);
-                        img_header = ButterKnife.findById(view, R.id.img_header);
-                        tv_name = ButterKnife.findById(view, R.id.tv_name);
-                        tv_type = ButterKnife.findById(view, R.id.tv_type);
-                        tv_sex = ButterKnife.findById(view, R.id.tv_sex);
-                        tv_appointed_time = ButterKnife.findById(view, R.id.tv_appointed_time);
-                        tv_charging = ButterKnife.findById(view, R.id.tv_charging);
-                        tv_curriculum = ButterKnife.findById(view, R.id.tv_curriculum);
-                        tv_address = ButterKnife.findById(view, R.id.tv_address);
-                        tv_place = ButterKnife.findById(view, R.id.tv_place);
-                        tv_state = ButterKnife.findById(view, R.id.tv_state);
+                        tv_oid = ButterKnife.findById(view, R.id.tv_oid);
+                        tv_created_at = ButterKnife.findById(view, R.id.tv_created_at);
+                        tv_appointment_time = ButterKnife.findById(view, R.id.tv_appointment_time);
+                        tv_subject = ButterKnife.findById(view, R.id.tv_subject);
+                        tv_text = ButterKnife.findById(view, R.id.tv_text);
+                        tv_receiver_id = ButterKnife.findById(view, R.id.tv_receiver_id);
+                        tv_distance = ButterKnife.findById(view, R.id.tv_distance);
+                        tv_location = ButterKnife.findById(view, R.id.tv_location);
+                        tv_offer_price = ButterKnife.findById(view, R.id.tv_offer_price);
+                        tv_order_status = ButterKnife.findById(view, R.id.tv_order_status);
                         return view;
                     }
 
                     @Override
-                    public void showData(int position, OrderEntity itemData) {
-                        Picasso.with(mContext).load(ApiConstants.Urls.API_IMG_BASE_URLS + itemData.getImg_header()).into(img_header);
-                        tv_name.setText(itemData.getName());
-                        tv_type.setText(itemData.getType());
-                        tv_sex.setText(itemData.getSex());
-                        tv_appointed_time.setText(itemData.getAppointed_time());
-                        tv_charging.setText(itemData.getCharging());
-                        tv_curriculum.setText(itemData.getCurriculum());
-                        tv_address.setText(itemData.getAddress());
-                        tv_place.setText(itemData.getPlace());
-
-                        if (itemData.getState().equals("1")) {
-                            tv_state.setText("待完成");
-                        } else if (itemData.getState().equals("3")) {
-                            tv_state.setText("未付款");
-                        } else if (itemData.getState().equals("4")) {
-                            tv_state.setText("已付款");
+                    public void showData(int position, OrdersBean itemData) {
+                        tv_oid.setText(itemData.oid);
+                        tv_created_at.setText(itemData.created_at);
+                        tv_appointment_time.setText(itemData.appointment_time);
+                        tv_subject.setText(itemData.subject);
+                        tv_text.setText(itemData.text);
+                        tv_receiver_id.setText(itemData.receiver_id);
+                        tv_distance.setText(LocationManager.getDistance(Double.parseDouble(itemData.lat), Double.parseDouble(itemData.lon)));
+                        tv_location.setText(itemData.location);
+                        tv_offer_price.setText(itemData.offer_price);
+                        if (itemData.order_status==2) {
+                            tv_order_status.setText("未付款");
+                        } else if (itemData.order_status==3) {
+                            tv_order_status.setText("已付款");
                         }
-
                     }
                 };
             }
@@ -216,89 +218,107 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
     }
 
     @Override
-    public void navigateToOrderDetail(OrderEntity data) {
-        Bundle bundle=new Bundle();
-        bundle.putSerializable("data",data);
-        readyGo(OrderDetailActivity.class,bundle);
-    }
-
-    @Override
-    public void refreshListData(OrderResponse data) {
-        if (fragmentMyOrderListSwipeLayout != null)
-            fragmentMyOrderListSwipeLayout.setRefreshing(false);
-        if (data != null) {
-            if (data.getOrderEntities().size() >= 2) {
-                if (mListViewAdapter != null) {
-                    mListViewAdapter.getDataList().clear();
-                    mListViewAdapter.getDataList().addAll(data.getOrderEntities());
-                    mListViewAdapter.notifyDataSetChanged();
-                }
-            }
-            if (data.getTotal_page() > page)
-                fragmentMyOrderListListView.setCanLoadMore(true);
-            else
-                fragmentMyOrderListListView.setCanLoadMore(false);
+    public void navigateToOrderDetail(OrdersBean itemData) {
+        if (itemData!=null){
+            Bundle bundle=new Bundle();
+            bundle.putSerializable("data",itemData);
+            readyGo(OrderDetailActivity.class,bundle);
         }
     }
-
-    @Override
-    public void addMoreListData(OrderResponse data) {
-        if (fragmentMyOrderListListView != null)
-            fragmentMyOrderListListView.onLoadMoreComplete();
-        if (data != null) {
-            if (mListViewAdapter != null) {
-                mListViewAdapter.getDataList().addAll(data.getOrderEntities());
-                mListViewAdapter.notifyDataSetChanged();
-            }
-            if (data.getTotal_page() > page)
-                fragmentMyOrderListListView.setCanLoadMore(true);
-            else
-                fragmentMyOrderListListView.setCanLoadMore(false);
-        }
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        OrderEntity orderEntity = (OrderEntity) parent.getItemAtPosition(position);
-        navigateToOrderDetail(orderEntity);
+        OrdersBean ordersBean = (OrdersBean) parent.getAdapter().getItem(position);
+        navigateToOrderDetail(ordersBean);
     }
+
+    @Override
+    public void refreshListData(orderResponse response) {
+        if (fragmentMyOrderListSwipeLayout != null)
+            fragmentMyOrderListSwipeLayout.setRefreshing(false);
+        if (response.orders != null) {
+            if (response.orders.size() >= 1) {
+                if (mListViewAdapter != null) {
+                    mListViewAdapter.getDataList().clear();
+                    mListViewAdapter.getDataList().addAll(response.orders);
+                    mListViewAdapter.notifyDataSetChanged();
+                }
+            }else {
+                mListViewAdapter.getDataList().clear();
+                mListViewAdapter.notifyDataSetChanged();
+            }
+            if (fragmentMyOrderListListView!=null){
+                if (UriHelper.getInstance().calculateTotalPages(response.total_count) > page)
+                    fragmentMyOrderListListView.setCanLoadMore(true);
+                else
+                    fragmentMyOrderListListView.setCanLoadMore(false);
+            }
+        }else {
+            mListViewAdapter.getDataList().clear();
+            mListViewAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void addMoreListData(orderResponse response) {
+        if (fragmentMyOrderListListView != null)
+            fragmentMyOrderListListView.onLoadMoreComplete();
+        if (response.orders != null) {
+            if (mListViewAdapter != null) {
+                mListViewAdapter.getDataList().addAll(response.orders);
+                mListViewAdapter.notifyDataSetChanged();
+            }
+            if (fragmentMyOrderListListView!=null){
+                if (UriHelper.getInstance().calculateTotalPages(response.total_count) > page)
+                    fragmentMyOrderListListView.setCanLoadMore(true);
+                else
+                    fragmentMyOrderListListView.setCanLoadMore(false);
+            }
+        }
+    }
+
 
     @Override
     public void onLoadMore() {
         page = page + 1;
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-        jsonObject.addProperty("version", Constants.ZSBVERSION);
-        jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-        jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-        jsonObject.addProperty("page", page);
-        jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);
-        if (myOrderGroupMenuIncomplete.isChecked()) {
-            jsonObject.addProperty("order_status", 1);
-        } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
-            jsonObject.addProperty("order_status", 4);
-        } else {
-            jsonObject.addProperty("order_status", 1);
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+            jsonObject.put("page", page);
+            jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
+            if (myOrderGroupMenuIncomplete.isChecked()) {
+                jsonObject.put("order_status", 2);
+            } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
+                jsonObject.put("order_status", 3);
+            }
+        }catch (JSONException j){
+
         }
+
         orderPresenter.onOrder(Constants.EVENT_LOAD_MORE_DATA, jsonObject);
     }
 
     @Override
     public void onRefresh() {
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-        jsonObject.addProperty("version", Constants.ZSBVERSION);
-        jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-        jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-        jsonObject.addProperty("page", 1);
-        jsonObject.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);
-        if (myOrderGroupMenuIncomplete.isChecked()) {
-            jsonObject.addProperty("order_status", 1);
-        } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
-            jsonObject.addProperty("order_status", 4);
-        } else {
-            jsonObject.addProperty("order_status", 1);
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+            jsonObject.put("page", 1);
+            jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
+            if (myOrderGroupMenuIncomplete.isChecked()) {
+                jsonObject.put("order_status", 2);
+            } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
+                jsonObject.put("order_status",3);
+            }
+        }catch (JSONException j){
+
         }
+
         orderPresenter.onOrder(Constants.EVENT_REFRESH_DATA, jsonObject);
     }
 
@@ -309,25 +329,37 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                 finish();
                 break;
             case R.id.my_order_group_menu_incomplete:
-                JsonObject incomplete = new JsonObject();
-                incomplete.addProperty("appkey", Constants.ZSBAPPKEY);
-                incomplete.addProperty("version", Constants.ZSBVERSION);
-                incomplete.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-                incomplete.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                incomplete.addProperty("order_status", 1);
-                incomplete.addProperty("page", 1);
-                incomplete.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);
+                mListViewAdapter.getDataList().clear();
+                mListViewAdapter.notifyDataSetChanged();
+                JSONObject incomplete=new JSONObject();
+                try {
+                    incomplete.put("appkey", Constants.ZSBAPPKEY);
+                    incomplete.put("version", Constants.ZSBVERSION);
+                    incomplete.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+                    incomplete.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+                    incomplete.put("order_status", 2);
+                    incomplete.put("page", 1);
+                    incomplete.put("rows", ApiConstants.Integers.PAGE_LIMIT);
+                }catch (JSONException j){
+
+                }
                 orderPresenter.onOrder(Constants.EVENT_REFRESH_DATA, incomplete);
                 break;
             case R.id.my_order_group_menu_recent_completed:
-                JsonObject recent_completed = new JsonObject();
-                recent_completed.addProperty("appkey", Constants.ZSBAPPKEY);
-                recent_completed.addProperty("version", Constants.ZSBVERSION);
-                recent_completed.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-                recent_completed.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                recent_completed.addProperty("order_status", 4);
-                recent_completed.addProperty("page", 1);
-                recent_completed.addProperty("rows", ApiConstants.Integers.PAGE_LIMIT);
+                mListViewAdapter.getDataList().clear();
+                mListViewAdapter.notifyDataSetChanged();
+                JSONObject recent_completed=new JSONObject();
+                try {
+                    recent_completed.put("appkey", Constants.ZSBAPPKEY);
+                    recent_completed.put("version", Constants.ZSBVERSION);
+                    recent_completed.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+                    recent_completed.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+                    recent_completed.put("order_status", 3);
+                    recent_completed.put("page", 1);
+                    recent_completed.put("rows", ApiConstants.Integers.PAGE_LIMIT);
+                }catch (JSONException j){
+
+                }
                 orderPresenter.onOrder(Constants.EVENT_REFRESH_DATA, recent_completed);
                 break;
         }

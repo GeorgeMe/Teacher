@@ -27,4 +27,14 @@
         android:textColor="@color/bar_text_color"
         android:textSize="@dimen/big_medium_text" />
 
+    <TextView
+        android:id="@+id/bar_home_demand"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/bar_height"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:text="@string/home_bar_demand"
+        android:textColor="@color/bar_text_color"
+        android:textSize="@dimen/big_small_text" />
+
 </RelativeLayout>

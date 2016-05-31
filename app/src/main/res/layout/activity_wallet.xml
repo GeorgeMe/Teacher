@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#d2d2d2">
+    android:background="#d2d2d2"
+    tools:context=".activity.WalletActivity">
     <include layout="@layout/top_view"/>
     <RelativeLayout
         android:orientation="horizontal"
@@ -40,11 +41,11 @@
         <TextView
             android:id="@+id/wallet_transaction_detail"
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="10dp"
-            android:gravity="center"
+            android:layout_marginTop="10dp"
             android:text="交易明细" />
     </RelativeLayout>
     <LinearLayout
@@ -65,7 +66,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="已累计销售课时：" />
+                android:text="已累计销售的买课时：" />
 
             <TextView
                 android:id="@+id/wallet_cumulative_class"
@@ -142,19 +143,5 @@
             android:paddingTop="10dp"
             android:drawableRight="@drawable/list_telescopic_more"
             android:text="我的银行卡" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#b7b7b7"/>
-        <TextView
-            android:id="@+id/wallet_vouchers"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="50dp"
-            android:paddingRight="20dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:drawableRight="@drawable/list_telescopic_more"
-            android:text="代金券" />
     </LinearLayout>
 </LinearLayout>

@@ -2,50 +2,17 @@ package com.dmd.zsb.mvp.interactor.impl;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.GsonRequest;
-import com.dmd.zsb.teacher.R;
-import com.dmd.zsb.entity.response.SplashResponse;
 import com.dmd.zsb.mvp.interactor.SplashInteractor;
-import com.dmd.zsb.mvp.listeners.BaseSingleLoadedListener;
-import com.dmd.zsb.utils.UriHelper;
-import com.dmd.zsb.utils.VolleyHelper;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import com.dmd.zsb.teacher.R;
 
 import java.util.Calendar;
 
 public class SplashInteractorImpl implements SplashInteractor {
 
-    private BaseSingleLoadedListener<SplashResponse> loadedListener;
-
-    public SplashInteractorImpl(BaseSingleLoadedListener<SplashResponse> loadedListener) {
-        this.loadedListener = loadedListener;
-    }
-
-    @Override
-    public void loadingInitData(JsonObject jsonObject) {
-        GsonRequest<SplashResponse> gsonRequest=new GsonRequest<SplashResponse>(UriHelper.getInstance().InitData(jsonObject),null,new TypeToken<SplashResponse>(){}.getType(), new Response.Listener<SplashResponse>(){
-            @Override
-            public void onResponse(SplashResponse response) {
-                Log.e("onResponse",""+response.getGradeList().size());
-                Log.e("onResponse",""+response.getSubjectList().size());
-                loadedListener.onSuccess(response);
-            }
-        },new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                loadedListener.onError(error.getMessage());
-            }
-        });
-        gsonRequest.setShouldCache(true);
-        gsonRequest.setTag("InitData");
-        VolleyHelper.getInstance().getRequestQueue().add(gsonRequest);
+    public SplashInteractorImpl() {
     }
 
     @Override

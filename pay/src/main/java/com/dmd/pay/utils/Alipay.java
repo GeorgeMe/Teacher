@@ -1,6 +1,16 @@
 package com.dmd.pay.utils;
 
 
+import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
+
+import com.alipay.sdk.app.PayTask;
+import com.dmd.pay.entity.PayInfo;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
@@ -8,16 +18,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
-
-import android.app.Activity;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Toast;
-
-import com.alipay.sdk.app.PayTask;
-import com.dmd.pay.entity.PayInfo;
 
 /**
  * Created by Administrator on 2016/4/12.
@@ -29,23 +29,24 @@ public class Alipay {
     // 商户收款账号
     public static final String SELLER = "656923138@qq.com";
     // 商户私钥，pkcs8格式
-    public static final String RSA_PRIVATE = "MIICXQIBAAKBgQDKyU4ZZhjvXOV4Qra8Uxpul6MR5epmcenNObX/YKOKHMwoObfV\n" +
-            "cMjTxwO6Dqi+mF8oEfQobOsvYfS4YRWQaccfbPWsudtpAY/coakCNbN7JyFMqYxc\n" +
-            "x2uzCC+xaQNIHARWb9b8w+4luYBWPyXr3jyw8ebVP4BRXdbwwtyF5B7YQwIDAQAB\n" +
-            "AoGARwi/J9yAzZA//aF4+30s3CKYB9P/CQXMPYyCuUNz5hRyW4DkaYsJfk3Pe2RZ\n" +
-            "LfKYGqQ3X9XPiJiKre+sKxsymarOh7nKxafTZ5HIwhjhN4/EbizbmyFXsZiCi8PP\n" +
-            "YiXbVeRi8WgEyISOzFnCYb39rFFP3lJLtVxYctGRM4PghAECQQDrW4Y5y0OM2pyY\n" +
-            "wv3IWRD5igfn2quqKTAZiXrCfps8tVhM/K2XMlBRSnmHEX2xoMFXO30cu+3SYP7/\n" +
-            "3RilyfpDAkEA3JJ2Enwp7podWid84E7psXR0dWZDw/CjsUKHct0maE7OUpIprGQ5\n" +
-            "IRKlv4gnHTc5q9FiqSl9fkJ9k4mlXfTKAQJAKtjHr9/UVWE7HwhooT+tunApjkkd\n" +
-            "9WV4Lz37Dkt0QXIWODXL+Hmda58uTqudgWftqs7WsRN5cVJdOgFrSkth9wJBAKqT\n" +
-            "cVAWSW9GK9DenMny/PLI9o8byOgsnsqkgo8ny137I7/jXOr+jteuzhNyvZzwal8f\n" +
-            "jEb52RzdWrPQTNx+RAECQQCJPX+gU8Kh02w4/cAmpQqFi5WaVF05sGjHixA694t8\n" +
-            "Q3qw98P0ijcdmrNdFq/i1NyhyuYGY3g5pDGsOfDOnXOc";
+    public static final String RSA_PRIVATE = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANjOHdsVgS+QGyIf" +
+            "h0SLjazkCqq6nqzkIUtaogMwq8uWRXnpa0jepQ4fm2mkOq1Dxy9gx3P0Y0uAMXTS" +
+            "vkC0TY9qby4yMaPQPA33OIn9Cv/XoMLQWiLRyKijmvQpy6r1riT2ShE3BWVjWgy8" +
+            "2quiB7B4W9pjNRGe3qHoaCzLY0rxAgMBAAECgYBiDm8wbHx+T5YGC+55EQkl3gn5" +
+            "B+jGV3O7iiVmffflX3TS28CbN5+9UIxQ7mdfgB0xj3sGNc1HE5bKuJo115aP5qZ5" +
+            "WpxEy+I1iblZwT36tZ1dLdhDCtt3LjKbBj33enH7r+9HoZq0OHD6az92hKUlcAhE" +
+            "UnqIpBux5qP/QJe2lQJBAPLK7eDL5lVZm2ZzJj5QKyH++yGe8iEJVjr9qY+JtUMw" +
+            "sBln1T0eW5JsjvNmX1MO12RxhboRJNT/Nzl0sVhtd0MCQQDkmUqPclZqySWjngT8" +
+            "oZhMpM38SyFTIUL4Gy2GL6KXazBSovc2Pn60KnNGLXzn+4QXXStubexMo0vzgFj1" +
+            "Ks+7AkAMcag1kF3S3A/h9V7tbLB5QpdehsYEOXVI+r1ZFQbMVc+AzdiZFFg/Lf85" +
+            "rHKQUD9r74GaIszPefE7qaZ5UMr/AkAkcnBZ2KAAnJt8r8gZw2X16lzROeVRTL9R" +
+            "sXubpmKlA7kLo+IIawRmk1IXwU7l6csQspEnJS2EtpB4fWExjabbAkEAp6aHMfgv" +
+            "zSWv26CdKz/x/ZO9wusKnAn86ZLQPCeMcN/pYITkZZ1mK48R+NVlccC7M3taFXM+" +
+            "N+Qb6R91AV+GvA==";
     // 支付宝公钥
-    public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB";
-
-
+    public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkr" +
+            "IvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1" +
+            "efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB";
     public static final int SDK_PAY_FLAG = 1;
 
     private Handler mHandler;
@@ -72,7 +73,7 @@ public class Alipay {
         // 订单
         DecimalFormat df = new DecimalFormat("0.00");
         String orderInfo = getOrderInfo(payinfo.getName(), payinfo.getDesc()+ " ", df.format(payinfo.getPrice() * payinfo.getRate()));
-
+        Log.e("Alipay",orderInfo);
         // 对订单做RSA 签名
         String sign = sign(orderInfo);
         try {
@@ -84,7 +85,7 @@ public class Alipay {
 
         // 完整的符合支付宝参数规范的订单信息
         final String payInfo = orderInfo + "&sign=\"" + sign + "\"&" + getSignType();
-
+        Log.e("Alipay",payInfo);
         Runnable payRunnable = new Runnable() {
 
             @Override
@@ -139,7 +140,7 @@ public class Alipay {
         orderInfo += "&total_fee=" + "\"" + price + "\"";
 
         // 服务器异步通知页面路径
-        orderInfo += "&notify_url=" + "\"" + "http://notify.msp.hk/notify.htm"
+        orderInfo += "&notify_url=" + "\"" + "http://www.cqdmd.com/v1.0/t_order_android_alipay.action"
                 + "\"";
 
         // 服务接口名称， 固定值

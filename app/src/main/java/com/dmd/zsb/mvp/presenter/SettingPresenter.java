@@ -1,11 +1,11 @@
 package com.dmd.zsb.mvp.presenter;
 
-import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2016/3/25.
  */
 public interface SettingPresenter {
-    void uploadAvatar(int event, JsonObject jsonObject);
-    void onSignOut(int event, JsonObject jsonObject);
+    void uploadAvatar(int event,JSONObject jsonObject);
+    void onSignOut(int event,JSONObject jsonObject);
 }

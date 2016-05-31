@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="100dp"
-                android:src="@drawable/app_icon" />
+                android:src="@drawable/logo" />
 
             <EditText
                 android:id="@+id/et_nickname"

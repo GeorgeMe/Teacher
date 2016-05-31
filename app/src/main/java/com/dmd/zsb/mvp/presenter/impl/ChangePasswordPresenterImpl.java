@@ -6,12 +6,16 @@ import com.dmd.zsb.mvp.interactor.impl.ChangePasswordInteractorImpl;
 import com.dmd.zsb.mvp.listeners.BaseSingleLoadedListener;
 import com.dmd.zsb.mvp.presenter.ChangePasswordPresenter;
 import com.dmd.zsb.mvp.view.ChangePasswordView;
-import com.google.gson.JsonObject;
+import com.dmd.zsb.protocol.request.changepasswordRequest;
+import com.dmd.zsb.protocol.response.changepasswordResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2016/3/28.
  */
-public class ChangePasswordPresenterImpl implements ChangePasswordPresenter,BaseSingleLoadedListener<JsonObject> {
+public class ChangePasswordPresenterImpl implements ChangePasswordPresenter,BaseSingleLoadedListener<changepasswordResponse> {
     private ChangePasswordInteractorImpl changePasswordInteractor;
     private Context mContext;
     private ChangePasswordView changePasswordView;
@@ -23,17 +27,27 @@ public class ChangePasswordPresenterImpl implements ChangePasswordPresenter,Base
     }
 
     @Override
-    public void onChangePassword(JsonObject jsonObject) {
-        changePasswordInteractor.getCommonSingleData(jsonObject);
+    public void onChangePassword(JSONObject jsonObject) {
+        changePasswordView.showLoading(null);
+        changepasswordRequest request=new changepasswordRequest();
+        try {
+            request.fromJson(jsonObject);
+            changePasswordInteractor.getCommonSingleData(request.toJson());
+        }catch (JSONException j){
+
+        }
+
     }
 
     @Override
-    public void onSuccess(JsonObject data) {
+    public void onSuccess(changepasswordResponse data) {
+        changePasswordView.hideLoading();
         changePasswordView.toSettingView();
     }
 
     @Override
     public void onError(String msg) {
+        changePasswordView.hideLoading();
         changePasswordView.showTip(msg);
     }
 

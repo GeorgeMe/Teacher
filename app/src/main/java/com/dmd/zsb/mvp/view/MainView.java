@@ -2,7 +2,7 @@ package com.dmd.zsb.mvp.view;
 
 import android.view.View;
 
-public interface MainView {
+public interface MainView  extends BaseView{
 
     void initTabView();
 
@@ -11,6 +11,8 @@ public interface MainView {
     void setHomeText(boolean isSelected);
 
     void setMessageText(boolean isSelected);
+
+  //  void setSeekText(boolean isSelected);
 
     void setMineText(boolean isSelected);
 

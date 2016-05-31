@@ -1,47 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dmd.zsb.teacher">
-
-    <!-- 访问网络，网络定位需要上网 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:resizeable="true"
+        android:smallScreens="true" />
     <application
         android:name="com.dmd.zsb.TutorApplication"
         android:allowBackup="true"
-        android:icon="@drawable/app_icon"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.LeadActivity" />
-        <activity android:name=".activity.SplashActivity">
+
+        <meta-data android:name="DATABASE" android:value="sugar.db" />
+        <meta-data android:name="VERSION" android:value="1" />
+        <meta-data android:name="QUERY_LOG" android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.dmd.zsb.protocol.table" />
+
+        <!-- 引导页 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.LeadActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- launcher -->
+        <activity android:name="com.dmd.zsb.teacher.activity.SplashActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".activity.SignInActivity" />
-        <activity android:name=".activity.SignUpActivity" />
-        <activity android:name=".activity.TransactionActivity" />
-        <activity android:name=".activity.AboutUsActivity" />
-        <activity android:name=".activity.BankCardActivity" />
-        <activity android:name=".activity.BriefActivity" />
-        <activity android:name=".activity.ChangePasswordActivity" />
-        <activity android:name=".activity.EvaluationActivity" />
-        <activity android:name=".activity.FeedbackActivity" />
-        <activity android:name=".activity.NickNameActivity" />
-        <activity android:name=".activity.OrderActivity" />
-        <activity android:name=".activity.RechargeActivity" />
-        <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".activity.SignatureActivity" />
-        <activity android:name=".activity.TransactionDetailActivity" />
-        <activity android:name=".activity.VouchersActivity" />
-        <activity android:name=".activity.WalletActivity" />
-        <activity android:name=".activity.WithDrawalsActivity" />
-        <activity android:name=".activity.OrderDetailActivity" />
-        <activity android:name=".activity.WalletTransationActivity" />
-        <activity android:name=".activity.SubjectActivity"/>
+        <!-- 注册 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.SignUpActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 登录 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.SignInActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 主activity -->
+        <activity android:name="com.dmd.zsb.teacher.activity.MainActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <!-- 用户详情 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.UserDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 需求列表 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.DemandActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 搜索 -->
+        <!-- 钱包 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.WalletActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 订单 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.OrderActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 评论 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.EvaluationActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 代金券 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.VouchersActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 关于我们 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.AboutUsActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 发布需求 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.ReleaseOrderActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 测试 -->
+
+        <!-- 教师 -->
+        <!-- 设置 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.SettingActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 反馈 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.FeedbackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 昵称 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.NickNameActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 修改密码 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.ChangePasswordActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 签名 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.SignatureActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <!-- 简介 -->
+        <activity android:name="com.dmd.zsb.teacher.activity.BriefActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.dmd.zsb.teacher.activity.DemandDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.dmd.zsb.teacher.activity.EvaluationDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.dmd.zsb.teacher.activity.OrderDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.dmd.zsb.teacher.activity.BankCardActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.dmd.zsb.teacher.activity.WithDrawalsActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.dmd.zsb.teacher.activity.RechargeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.dmd.zsb.teacher.activity.TransactionDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

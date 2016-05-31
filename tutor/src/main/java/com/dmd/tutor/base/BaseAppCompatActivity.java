@@ -131,6 +131,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         NetStateReceiver.registerObserver(mNetChangeObserver);
 
         initViewsAndEvents();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override

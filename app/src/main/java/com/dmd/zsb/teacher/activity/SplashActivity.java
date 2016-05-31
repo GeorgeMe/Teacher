@@ -1,6 +1,5 @@
 package com.dmd.zsb.teacher.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -10,12 +9,12 @@ import android.widget.TextView;
 
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
-import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.mvp.presenter.impl.SplashPresenterImpl;
 import com.dmd.zsb.mvp.view.SplashView;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
+import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 import cn.smssdk.SMSSDK;
@@ -28,7 +27,9 @@ public class SplashActivity extends BaseActivity implements SplashView {
     TextView splashVersionName;
     @Bind(R.id.splash_copyright)
     TextView splashCopyright;
+
     private SplashPresenterImpl mSplashPresenter = null;
+
     @Override
     protected void getBundleExtras(Bundle extras) {
 
@@ -38,7 +39,7 @@ public class SplashActivity extends BaseActivity implements SplashView {
     protected int getContentViewLayoutID() {
         return R.layout.activity_splash;
     }
-
+    @Subscribe
     @Override
     public void onEventComming(EventCenter eventCenter) {
 
@@ -51,9 +52,8 @@ public class SplashActivity extends BaseActivity implements SplashView {
 
     @Override
     protected void initViewsAndEvents() {
-        mSplashPresenter = new SplashPresenterImpl(mContext, this);
+        mSplashPresenter = new SplashPresenterImpl(this, this);
         mSplashPresenter.initialized();
-        mSplashPresenter.loadingInitData(null);
     }
 
     @Override
@@ -88,15 +88,7 @@ public class SplashActivity extends BaseActivity implements SplashView {
 
     @Override
     public void animateBackgroundImage(Animation animation) {
-        if (XmlDB.getInstance(this).getKeyBooleanValue("isFirstRunLead", true)) {
-            //进入引导页
-            Intent intent = new Intent(this, LeadActivity.class);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            finish();
-        } else {
-            splashImage.startAnimation(animation);
-        }
+        splashImage.startAnimation(animation);
     }
 
     @Override
@@ -105,19 +97,25 @@ public class SplashActivity extends BaseActivity implements SplashView {
         splashCopyright.setText(copyright);
         splashVersionName.setText(versionName);
         splashImage.setImageResource(backgroundResId);
+
     }
 
     @Override
     public void initializeUmengConfig() {
+/*        AnalyticsConfig.setAppkey("55018d77fd98c5901e000a09");
+        AnalyticsConfig.setChannel("SimplifyReader");*/
+    }
 
+    @Override
+    public void navigateToLead() {
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        readyGoThenKill(LeadActivity.class);
     }
 
     @Override
     public void navigateToHomePage() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        finish();
+        readyGoThenKill(MainActivity.class);
     }
 
     @Override
@@ -127,6 +125,5 @@ public class SplashActivity extends BaseActivity implements SplashView {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
 }

@@ -9,7 +9,7 @@ public class DaoFactory {
 	
 	/**
 	 * call this method to new a GenericDao
-	 * @param context
+	 * @param db
 	 * @param modelClazz
 	 * @return
 	 */

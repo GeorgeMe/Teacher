@@ -11,12 +11,19 @@
         android:layout_height="75dp">
 
         <TextView
+            android:id="@+id/tv_zjz"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:gravity="center_vertical"
             android:text="征集中"
             android:textSize="@dimen/big_medium_text" />
+        <ImageView
+            android:id="@+id/img_header"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/img_head_for_empty" />
     </RelativeLayout>
 
     <LinearLayout
@@ -26,6 +33,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/l_zjz"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -68,6 +76,40 @@
                     android:text="在校老师"
                     android:textSize="@dimen/micro_text" />
             </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/l_zjh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="0.5">
+
+                <TextView
+                    android:id="@+id/tv_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="李刚"
+                    android:textSize="@dimen/micro_text" />
+                <TextView
+                    android:id="@+id/tv_type2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="(在校学生)"
+                    android:textSize="@dimen/micro_text" />
+
+                <TextView
+                    android:id="@+id/tv_sex2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="女"
+                    android:textSize="@dimen/micro_text" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -190,6 +232,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/l_zjz_p"
                 android:layout_width="0dp"
                 android:layout_height="20dp"
                 android:layout_weight="0.5">
@@ -205,6 +248,37 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="90%"
+                    android:textSize="@dimen/micro_text" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/l_zjh_m"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="0.5">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="方式:"
+                    android:textSize="@dimen/micro_text" />
+                <TextView
+                    android:id="@+id/tv_mode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="一对一"
+                    android:textSize="@dimen/micro_text" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/l_zjh_s"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_height="20dp"
+                android:layout_weight="0.5">
+                <TextView
+                    android:id="@+id/tv_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="已完成"
                     android:textSize="@dimen/micro_text" />
             </LinearLayout>
         </LinearLayout>

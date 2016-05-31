@@ -5,4 +5,10 @@ package com.dmd.zsb.mvp.view;
  */
 public interface SettingView extends BaseView {
     void showTip(String msg);
+   // void uploadAvatar(String avatar);
+/*    void SettingNickname(String avatar);
+    void SettingSignature(String avatar);
+    void SettingBrief(String avatar);
+    void SettingChangePassword(String avatar);
+    void SettingFeedback(String avatar);*/
 }

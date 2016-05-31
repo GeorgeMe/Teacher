@@ -7,29 +7,28 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.alibaba.mobileim.channel.event.IWxCallback;
 import com.alibaba.mobileim.channel.util.YWLog;
 import com.alibaba.mobileim.login.YWLoginCode;
-import com.dmd.dialog.MaterialDialog;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
-import com.dmd.tutor.widgets.ProgressDialog;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.openim.LoginSampleHelper;
-import com.dmd.zsb.openim.Notification;
-import com.dmd.zsb.openim.NotificationInitSampleHelper;
-import com.dmd.zsb.openim.UserProfileSampleHelper;
-import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.SignUpPresenterImpl;
 import com.dmd.zsb.mvp.view.SignUpView;
+import com.dmd.zsb.openim.LoginHelper;
+import com.dmd.zsb.openim.Notification;
+import com.dmd.zsb.openim.NotificationInitHelper;
+import com.dmd.zsb.openim.UserProfileHelper;
+import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
 import com.dmd.zsb.widgets.ToastView;
-import com.google.gson.JsonObject;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -51,8 +50,6 @@ public class SignUpActivity extends BaseActivity implements SignUpView, View.OnC
 
     private SignUpPresenterImpl signUpPresenter;
     private String mobile;
-    private ProgressDialog progressDialog=null;
-
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -170,22 +167,23 @@ public class SignUpActivity extends BaseActivity implements SignUpView, View.OnC
                 } else {
                     CloseKeyBoard();
                     btnSignupComplete.setClickable(false);
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                    jsonObject.addProperty("version", Constants.ZSBVERSION);
-                    jsonObject.addProperty("client_type", Constants.PLATFORM);
-                    jsonObject.addProperty("location", XmlDB.getInstance(mContext).getKeyString("addr","未取得定位地址"));
-                    jsonObject.addProperty("lat", XmlDB.getInstance(mContext).getKeyFloatValue("latitude", 0)+"");
-                    jsonObject.addProperty("lon", XmlDB.getInstance(mContext).getKeyFloatValue("longitude", 0)+"");
-                    jsonObject.addProperty("role", Constants.USER_ROLE);
-                    jsonObject.addProperty("nickname", nickname);
-                    jsonObject.addProperty("mobile", mobile);
-                    jsonObject.addProperty("password", password);
-                    signUpPresenter.onSignUp(jsonObject);
-                    if (progressDialog==null) {
-                        progressDialog=new ProgressDialog(mContext,getString(R.string.please_later_on));
+                    JSONObject jsonObject=new JSONObject();
+                    try {
+                        jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.put("version", Constants.ZSBVERSION);
+                        jsonObject.put("client_type", Constants.PLATFORM);
+                        jsonObject.put("location", XmlDB.getInstance(mContext).getKeyString("addr","未取得定位地址"));
+                        jsonObject.put("lat", XmlDB.getInstance(mContext).getKeyFloatValue("latitude", 0)+"");
+                        jsonObject.put("lon", XmlDB.getInstance(mContext).getKeyFloatValue("longitude", 0)+"");
+                        jsonObject.put("role", Constants.USER_ROLE);
+                        jsonObject.put("nickname", nickname);
+                        jsonObject.put("mobile", mobile);
+                        jsonObject.put("password", password);
+                    }catch (JSONException j){
 
                     }
+
+                    signUpPresenter.signUp(jsonObject);
                 }
                 break;
         }
@@ -193,17 +191,13 @@ public class SignUpActivity extends BaseActivity implements SignUpView, View.OnC
 
     @Override
     public void navigateToHome() {
-        LoginSampleHelper.getInstance().login_Sample(mobile, etPassword.getText().toString(), getString(R.string.app_key), new IWxCallback() {
+        LoginHelper.getInstance().login_Sample(mobile, etPassword.getText().toString(), getString(R.string.app_key), new IWxCallback() {
 
             @Override
             public void onSuccess(Object... arg0) {
+                hideLoading();
                 saveIdPasswordToLocal(mobile, etPassword.getText().toString());
-
                 btnSignupComplete.setClickable(true);
-                if (progressDialog!=null){
-                    progressDialog.dismiss();
-                    progressDialog=null;
-                }
                 Toast.makeText(mContext, "登录成功",Toast.LENGTH_SHORT).show();
                 YWLog.i(TAG_LOG, "login success!");
                 XmlDB.getInstance(mContext).saveKey("isLogin", true);
@@ -221,10 +215,7 @@ public class SignUpActivity extends BaseActivity implements SignUpView, View.OnC
 
             @Override
             public void onError(int errorCode, String errorMessage) {
-                if (progressDialog!=null){
-                    progressDialog.dismiss();
-                    progressDialog=null;
-                }
+                hideLoading();
                 if (errorCode == YWLoginCode.LOGON_FAIL_INVALIDUSER) { //若用户不存在，则提示使用游客方式登陆
                     showTip(errorMessage);
                 } else {
@@ -239,11 +230,8 @@ public class SignUpActivity extends BaseActivity implements SignUpView, View.OnC
 
     @Override
     public void showTip(String msg) {
+        hideLoading();
         btnSignupComplete.setClickable(true);
-        if (progressDialog!=null){
-            progressDialog.dismiss();
-            progressDialog=null;
-        }
         ToastView toast = new ToastView(mContext, msg);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
@@ -257,11 +245,11 @@ public class SignUpActivity extends BaseActivity implements SignUpView, View.OnC
     //=================================================open im========================================================
     private void init(String mobile, String appKey) {
         //初始化imkit
-        LoginSampleHelper.getInstance().initIMKit(mobile, appKey);
+        LoginHelper.getInstance().initIMKit(mobile, appKey);
         //自定义头像和昵称回调初始化(如果不需要自定义头像和昵称，则可以省去)
-        UserProfileSampleHelper.initProfileCallback();
+        UserProfileHelper.initProfileCallback();
         //通知栏相关的初始化
-        NotificationInitSampleHelper.init();
+        NotificationInitHelper.init();
 
     }
 

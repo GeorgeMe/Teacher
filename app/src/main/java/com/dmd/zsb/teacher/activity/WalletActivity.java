@@ -8,11 +8,14 @@ import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.WalletPresenterImpl;
 import com.dmd.zsb.mvp.view.WalletView;
+import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
-import com.google.gson.JsonObject;
+import com.dmd.zsb.protocol.response.walletResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -37,10 +40,13 @@ public class WalletActivity extends BaseActivity implements WalletView{
     TextView walletWithdrawals;
     @Bind(R.id.wallet_bank_card)
     TextView walletBankCard;
-    @Bind(R.id.wallet_vouchers)
-    TextView walletVouchers;
 
     private WalletPresenterImpl walletPresenter;
+
+    public String   buyer_id;
+    public String   balance;
+    public String   bank_card;
+
     @Override
     protected void getBundleExtras(Bundle extras) {
 
@@ -65,19 +71,28 @@ public class WalletActivity extends BaseActivity implements WalletView{
     protected void initViewsAndEvents() {
         topBarTitle.setText("我的钱包");
         walletPresenter=new WalletPresenterImpl(this,mContext);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-        jsonObject.addProperty("version", Constants.ZSBVERSION);
-        jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-        jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+        }catch (JSONException j){
+
+        }
         walletPresenter.onWalletInfo(jsonObject);
     }
 
     @Override
-    public void setView(JsonObject jsonObject) {
-        walletBalance.setText(jsonObject.get("balance").getAsString());
-        walletCumulativeClass.setText(jsonObject.get("total_hours").getAsString());
-        walletEarnMoney.setText(jsonObject.get("total_amount").getAsString());
+    public void setView(walletResponse response) {
+        balance=response.balance;
+        bank_card=response.bank_card;
+        buyer_id=response.buyer_id;
+        walletBalance.setText(response.balance+" ￥");
+
+        walletCumulativeClass.setText(response.total_hours+" 小时");
+        walletEarnMoney.setText(response.total_amount+" ￥");
+
     }
 
     @Override
@@ -115,26 +130,30 @@ public class WalletActivity extends BaseActivity implements WalletView{
         return null;
     }
 
-    @OnClick({R.id.top_bar_back, R.id.wallet_transaction_detail, R.id.wallet_cumulative_class, R.id.wallet_earn_money, R.id.wallet_recharge, R.id.wallet_withdrawals, R.id.wallet_bank_card, R.id.wallet_vouchers})
+    @OnClick({R.id.top_bar_back, R.id.wallet_transaction_detail, R.id.wallet_cumulative_class, R.id.wallet_earn_money, R.id.wallet_recharge, R.id.wallet_withdrawals, R.id.wallet_bank_card})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.top_bar_back:
                 finish();
                 break;
             case R.id.wallet_transaction_detail:
-                readyGo(WalletTransationActivity.class);
+                Bundle transaction=new Bundle();
+                transaction.putString("buyer_id",buyer_id);
+                readyGo(TransactionDetailActivity.class,transaction);
                 break;
             case R.id.wallet_recharge:
                 readyGo(RechargeActivity.class);
                 break;
             case R.id.wallet_withdrawals:
-                readyGo(WithDrawalsActivity.class);
+                Bundle withdrawals=new Bundle();
+                withdrawals.putString("bank_card",bank_card);
+                withdrawals.putString("transfer_amount",balance);
+                readyGo(WithDrawalsActivity.class,withdrawals);
                 break;
             case R.id.wallet_bank_card:
-                readyGo(BankCardActivity.class);
-                break;
-            case R.id.wallet_vouchers:
-                readyGo(VouchersActivity.class);
+                Bundle bankCard=new Bundle();
+                bankCard.putString("bank_card",bank_card);
+                readyGo(BankCardActivity.class,bankCard);
                 break;
         }
     }

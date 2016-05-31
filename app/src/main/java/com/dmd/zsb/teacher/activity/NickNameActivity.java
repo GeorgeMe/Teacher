@@ -12,14 +12,15 @@ import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.NickNamePresenterImpl;
 import com.dmd.zsb.mvp.view.NickNameView;
+import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
-import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class NickNameActivity extends BaseActivity implements NickNameView{
@@ -98,12 +99,17 @@ public class NickNameActivity extends BaseActivity implements NickNameView{
                 finish();
                 break;
             case R.id.btn_save:
-                JsonObject jsonObject=new JsonObject();
-                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                jsonObject.addProperty("version", Constants.ZSBVERSION);
-                jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
-                jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
-                jsonObject.addProperty("nickname",etNickname.getText().toString());
+                JSONObject jsonObject=new JSONObject();
+                try {
+                    jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                    jsonObject.put("version", Constants.ZSBVERSION);
+                    jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
+                    jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
+                    jsonObject.put("nickname",etNickname.getText().toString());
+                }catch (JSONException j){
+
+                }
+
                 nickNamePresenter.updateNickName(jsonObject);
                 break;
         }

@@ -7,11 +7,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.dmd.tutor.utils.DensityUtils;
-//import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ImageContainerLayout extends LinearLayout
 {

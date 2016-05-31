@@ -27,13 +27,15 @@ import com.alibaba.mobileim.conversation.YWMessageChannel;
 import com.alibaba.mobileim.conversation.YWMessageType;
 import com.alibaba.mobileim.conversation.YWPushInfo;
 import com.dmd.tutor.eventbus.EventCenter;
+import com.dmd.tutor.lbs.LocationManager;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
+import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.mvp.presenter.impl.MainViewImpl;
 import com.dmd.zsb.mvp.view.MainView;
-import com.dmd.zsb.openim.CustomConversationHelper;
-import com.dmd.zsb.openim.LoginSampleHelper;
+import com.dmd.zsb.openim.LoginHelper;
 import com.dmd.zsb.openim.Notification;
+import com.dmd.zsb.protocol.table.SubjectsBean;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
 import com.dmd.zsb.teacher.fragment.HomeFragment;
@@ -44,26 +46,29 @@ import com.squareup.otto.Subscribe;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements MainView, TabHost.OnTabChangeListener {
+public class MainActivity extends BaseActivity implements MainView,TabHost.OnTabChangeListener {
     private final static String TAG=MainActivity.TAG_LOG;
     @Bind(android.R.id.tabhost)
     FragmentTabHost tabhost;
 
-    private static long DOUBLE_CLICK_TIME = 0L;
     public static final String LOGIN_SUCCESS = "loginSuccess";
-    public static final String TAB_HOME = "home";
-    public static final String TAB_MESSAGE = "message";
-    public static final String TAB_MINE = "mine";
-
     public static final String SYSTEM_TRIBE_CONVERSATION="sysTribe";
     public static final String SYSTEM_FRIEND_REQ_CONVERSATION="sysfrdreq";
 
-    private TextView mHomeTab,mMessageTab,mMineTab,mUnread;
-    private Drawable mHomePressed,mHomeNormal,mMessagePressed,mMessageNormal,mMinePressed,mMineNormal;
+    private static long DOUBLE_CLICK_TIME = 0L;
+
+    public static final String TAB_HOME = "home";
+    public static final String TAB_MESSAGE = "message";
+    //public static final String TAB_SEEK = "seek";
+    public static final String TAB_MINE = "mine";
+
+    private TextView mHomeTab,mMessageTab,mSeekTab,mMineTab,mUnread;
+    private Drawable mHomePressed,mHomeNormal,mMessagePressed,mMessageNormal;
+    private Drawable mSeekPressed,mSeekNormal,mMinePressed,mMineNormal;
 
     private YWIMKit mIMKit;
     private IYWConversationService mConversationService;
-    private IYWConversationUnreadChangeListener mConversationUnreadChangeListener;
+   private IYWConversationUnreadChangeListener mConversationUnreadChangeListener;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private IYWMessageLifeCycleListener mMessageLifeCycleListener;
@@ -94,20 +99,21 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
 
     @Override
     protected int getContentViewLayoutID() {
-
+       // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         return R.layout.activity_main;
     }
-
     @Subscribe
     @Override
     public void onEventComming(EventCenter eventCenter) {
-/*        if (eventCenter.getEventCode()== Constants.EVENT_RECOMMEND_COURSES_HOME){
-            SubjectEntity entity=(SubjectEntity) eventCenter.getData();
-            XmlDB.getInstance(mContext).saveKey("subid",entity.getSub_id());
-            //showToast(entity.getSubid()););
-            tabhost.onTabChanged(TAB_SEEK);
-            tabhost.setCurrentTabByTag(TAB_SEEK);
-        }*/
+        if (eventCenter.getEventCode()== Constants.EVENT_RECOMMEND_COURSES_HOME){
+            //tabhost.onTabChanged(TAB_SEEK);
+            //tabhost.setCurrentTabByTag(TAB_SEEK);
+            SubjectsBean entity=(SubjectsBean) eventCenter.getData();
+            //BusHelper.post(new EventCenter(Constants.EVENT_RECOMMEND_COURSES_SEEK,entity.sub_id));
+            XmlDB.getInstance(mContext).saveKey("subid",entity.sub_id);
+        }else if (eventCenter.getEventCode()== Constants.EVENT_RECOMMEND_COURSES_SIGNIN){
+
+        }
     }
 
     @Override
@@ -117,9 +123,11 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
 
     @Override
     protected void initViewsAndEvents() {
+
+
         if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
-            LoginSampleHelper.getInstance().initSDK_Sample(getBaseApplication());
-            mIMKit = LoginSampleHelper.getInstance().getIMKit();
+            LoginHelper.getInstance().initSDK_Sample(getBaseApplication());
+            mIMKit = LoginHelper.getInstance().getIMKit();
             if (mIMKit == null) {
                 return;
             }
@@ -129,6 +137,8 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
 
         mainView=new MainViewImpl(this,this);
         mainView.initialized();
+
+        LocationManager.getInstance().refreshLocation();
     }
 
     @Override
@@ -148,7 +158,7 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
 
     @Override
     protected boolean isBindEventBusHere() {
-        return false;
+        return true;
     }
 
     @Override
@@ -170,18 +180,17 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
         tabhost.addTab(tabhost.newTabSpec(TAB_HOME).setIndicator(indicator),HomeFragment.class, null);
 
         indicator = getIndicatorView(TAB_MESSAGE);
-        if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)) {
-            tabhost.addTab(tabhost.newTabSpec(TAB_MESSAGE).setIndicator(indicator), mIMKit.getConversationFragmentClass(), null);
-        }else {
+        if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+          tabhost.addTab(tabhost.newTabSpec(TAB_MESSAGE).setIndicator(indicator), mIMKit.getConversationFragmentClass(), null);
+        }else{
             tabhost.addTab(tabhost.newTabSpec(TAB_MESSAGE).setIndicator(indicator), MessageFragment.class, null);
         }
 
-        //tabhost.addTab(tabhost.newTabSpec(TAB_MESSAGE).setIndicator(indicator), MessageFragment.class, null);
+       // indicator = getIndicatorView(TAB_SEEK);
+       // tabhost.addTab(tabhost.newTabSpec(TAB_SEEK).setIndicator(indicator), SeekFragment.class, null);
 
         indicator = getIndicatorView(TAB_MINE);
         tabhost.addTab(tabhost.newTabSpec(TAB_MINE).setIndicator(indicator), MineFragment.class, null);
-
-        mUnread = (TextView) findViewById(R.id.unread);
 
         tabhost.setOnTabChangedListener(this);
         this.onTabChanged(TAB_HOME);
@@ -201,11 +210,20 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
             mHomeTab = indicator;
         } else if (tab.equals(TAB_MESSAGE)) {
             indicator.setText("消息");
+            mUnread = (TextView) tabView.findViewById(R.id.unread);
             drawable = getResources().getDrawable(R.drawable.nav_message_normal);
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
             indicator.setCompoundDrawables(null, drawable, null, null);
             mMessageTab = indicator;
-        } else if (tab.equals(TAB_MINE)) {
+        }
+/*        else if (tab.equals(TAB_SEEK)) {
+            indicator.setText("找老师");
+            drawable = getResources().getDrawable(R.drawable.nav_seek_normal);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
+            indicator.setCompoundDrawables(null, drawable, null, null);
+            mSeekTab = indicator;
+        } */
+        else if (tab.equals(TAB_MINE)) {
             indicator.setText("我的");
             drawable = getResources().getDrawable(R.drawable.nav_message_normal);
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),drawable.getIntrinsicHeight());
@@ -259,6 +277,7 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
         }
     }
 
+
     @Override
     public void setMineText(boolean isSelected) {
         Drawable drawable = null;
@@ -291,7 +310,14 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
             setHomeText(false);
             setMessageText(true);
             setMineText(false);
-        }else if (TAB_MINE.equals(tabId)) {
+        }
+/*        else if (TAB_SEEK.equals(tabId)) {
+            setHomeText(false);
+            setMessageText(false);
+            setSeekText(true);
+            setMineText(false);
+        }*/
+        else if (TAB_MINE.equals(tabId)) {
             setHomeText(false);
             setMessageText(false);
             setMineText(true);
@@ -319,9 +345,9 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
      * 自定义会话示例展示系统通知的示例
      */
     private void initCustomConversation() {
-        CustomConversationHelper.addCustomConversation(SYSTEM_TRIBE_CONVERSATION, null);
-        CustomConversationHelper.addCustomConversation(SYSTEM_FRIEND_REQ_CONVERSATION, null);
-        CustomConversationHelper.addCustomViewConversation("myConversation","这个会话的展示布局可以自定义");
+        //CustomConversationHelper.addCustomConversation(SYSTEM_TRIBE_CONVERSATION, null);
+        //CustomConversationHelper.addCustomConversation(SYSTEM_FRIEND_REQ_CONVERSATION, null);
+        //CustomConversationHelper.addCustomViewConversation("myConversation","这个会话的展示布局可以自定义");
     }
     private void initConversationServiceAndListener() {
         mConversationUnreadChangeListener = new IYWConversationUnreadChangeListener() {
@@ -332,12 +358,11 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        LoginSampleHelper loginHelper = LoginSampleHelper.getInstance();
-                        final YWIMKit imKit = loginHelper.getIMKit();
-                        mConversationService = imKit.getConversationService();
+                        mConversationService = LoginHelper.getInstance().getIMKit().getConversationService();
                         //获取当前登录用户的所有未读数
                         int unReadCount = mConversationService.getAllUnreadCount();
                         if (unReadCount > 0) {
+
                             mUnread.setVisibility(View.VISIBLE);
                             if (unReadCount < 100) {
                                 mUnread.setText(unReadCount + "");
@@ -560,36 +585,38 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
     @Override
     protected void onPause() {
         super.onPause();
-        if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)) {
+        if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
             //在Tab栏删除会话未读消息变化的全局监听器
             mConversationService.removeTotalUnreadChangeListener(mConversationUnreadChangeListener);
-            // mIMKit.getTribeService().removeTribeListener(mTribeChangedListener);
-
-            YWLog.i(TAG, "onPause");
         }
+        YWLog.i(TAG, "onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)) {
+        if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+            LoginHelper.getInstance().initSDK_Sample(getBaseApplication());
+            if (LoginHelper.getInstance().getIMKit()==null){
+                return;
+            }
+            mConversationService = LoginHelper.getInstance().getIMKit().getConversationService();
+            if (mConversationUnreadChangeListener!=null){
+                //resume时需要检查全局未读消息数并做处理，因为离开此界面时删除了全局消息监听器
+                mConversationUnreadChangeListener.onUnreadChange();
 
-            mConversationService = LoginSampleHelper.getInstance().getIMKit().getConversationService();
-
-            //resume时需要检查全局未读消息数并做处理，因为离开此界面时删除了全局消息监听器
-            mConversationUnreadChangeListener.onUnreadChange();
-
-            //在Tab栏增加会话未读消息变化的全局监听器
-            mConversationService.addTotalUnreadChangeListener(mConversationUnreadChangeListener);
-            Intent intent = getIntent();
-            if (intent != null && intent.getStringExtra(LOGIN_SUCCESS) != null) {
-                tabhost.onTabChanged(TAB_MESSAGE);
-                getIntent().removeExtra(LOGIN_SUCCESS);
+                //在Tab栏增加会话未读消息变化的全局监听器
+                mConversationService.addTotalUnreadChangeListener(mConversationUnreadChangeListener);
             }
 
-
+            Intent intent = getIntent();
+            if (intent != null && intent.getStringExtra(LOGIN_SUCCESS) != null){
+                tabhost.onTabChanged(TAB_HOME);
+                getIntent().removeExtra(LOGIN_SUCCESS);
+            }
             YWLog.i(TAG, "onResume");
         }
+
     }
 
     @Override
@@ -611,14 +638,22 @@ public class MainActivity extends BaseActivity implements MainView, TabHost.OnTa
             mHomeNormal.setCallback(null);
         }
 
+        if (mSeekPressed != null) {
+            mSeekPressed.setCallback(null);
+        }
+        if (mSeekNormal != null) {
+            mSeekNormal.setCallback(null);
+        }
+
         if (mMinePressed != null) {
             mMinePressed.setCallback(null);
         }
         if (mMineNormal != null) {
             mMineNormal.setCallback(null);
         }
-
         //移除联系人相关的监听
         removeContactListeners();
     }
+
+
 }

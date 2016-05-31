@@ -4,12 +4,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.dmd.zsb.teacher.activity.EvaluationActivity">
+    tools:context=".activity.EvaluationActivity">
 
     <include
         layout="@layout/top_view"
         android:layout_width="match_parent"
         android:layout_height="48dp" />
+
+    <RadioGroup
+        android:id="@+id/evaluation_menu_group"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/evaluation_group_menu_incomplete"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableBottom="@drawable/radio_button_drawable_bottom"
+            android:drawableTop="@drawable/radio_button_drawable_top"
+            android:gravity="center"
+            android:text="未完成评价"
+            android:textSize="@dimen/medium_text" />
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#aea6a6" />
+
+        <RadioButton
+            android:id="@+id/evaluation_group_menu_recent_completed"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableBottom="@drawable/radio_button_drawable_bottom"
+            android:drawableTop="@drawable/radio_button_drawable_top"
+            android:gravity="center"
+            android:text="已完成评价"
+            android:textSize="@dimen/medium_text" />
+
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="#aea6a6" />
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#aea6a6" />
+
+
     <com.dmd.tutor.widgets.XSwipeRefreshLayout
         android:id="@+id/fragment_evaluation_list_swipe_layout"
         android:layout_width="match_parent"

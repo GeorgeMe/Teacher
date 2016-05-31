@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="hint_text_view_height">40dip</dimen>
+    <dimen name="title_bar_height">45dip</dimen>
 
     <dimen name="aliwx_audio_height">30dip</dimen>
     <dimen name="aliwx_audio_minwidth">50dip</dimen>

@@ -1,25 +1,30 @@
 package com.dmd.zsb.teacher.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.dmd.dialog.AlertDialogWrapper;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.common.Constants;
+import com.dmd.zsb.mvp.presenter.impl.BriefPresenterImpl;
+import com.dmd.zsb.mvp.view.BriefView;
 import com.dmd.zsb.teacher.R;
-import com.dmd.zsb.mvp.presenter.impl.ProfilePresenterImpl;
-import com.dmd.zsb.mvp.view.ProfileView;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
-import com.google.gson.JsonObject;
+import com.dmd.zsb.protocol.response.briefResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class BriefActivity extends BaseActivity implements ProfileView {
+public class BriefActivity extends BaseActivity implements BriefView {
 
 
     @Bind(R.id.top_bar_back)
@@ -33,7 +38,7 @@ public class BriefActivity extends BaseActivity implements ProfileView {
     @Bind(R.id.btn_save)
     Button btnSave;
 
-    private ProfilePresenterImpl briefPresenter;
+    private BriefPresenterImpl briefPresenter;
     @Override
     protected void getBundleExtras(Bundle extras) {
 
@@ -56,7 +61,7 @@ public class BriefActivity extends BaseActivity implements ProfileView {
 
     @Override
     protected void initViewsAndEvents() {
-        briefPresenter=new ProfilePresenterImpl(this,mContext);
+        briefPresenter=new BriefPresenterImpl(this,mContext);
         topBarTitle.setText(getResources().getText(R.string.personal_brief));
     }
 
@@ -98,20 +103,38 @@ public class BriefActivity extends BaseActivity implements ProfileView {
                 finish();
                 break;
             case R.id.btn_save:
-                JsonObject jsonObject=new JsonObject();
-                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                jsonObject.addProperty("version", Constants.ZSBVERSION);
-                jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
-                jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
-                jsonObject.addProperty("brief",etBrief.getText().toString());
-                briefPresenter.onChangeProfile(jsonObject);
+                JSONObject jsonObject=new JSONObject();
+                try {
+                    jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                    jsonObject.put("version", Constants.ZSBVERSION);
+                    jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
+                    jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
+                    jsonObject.put("brief",etBrief.getText().toString());
+                }catch (JSONException j){
+
+                }
+                briefPresenter.onChangeBrief(jsonObject);
                 break;
         }
     }
 
     @Override
-    public void toSettingView() {
-        finish();
+    public void toSettingView(briefResponse response) {
+        if (response.errno==0){
+            new AlertDialogWrapper.Builder(this)
+                    .setTitle(R.string.title)
+                    .setMessage("修改成功")
+                    .setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    }).show();
+        }else {
+           showToast(response.msg);
+        }
+
     }
 
     @Override

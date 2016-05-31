@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.dmd.zsb.teacher.R;
-import com.dmd.zsb.entity.SubjectEntity;
+import com.dmd.zsb.protocol.table.SubjectsBean;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ import java.util.List;
  * Created by Administrator on 2016/1/6.
  */
 public class SeekSubjectAdapter extends BaseAdapter {
-    private List<SubjectEntity> list;
+    private List<SubjectsBean> list;
     private Context context;
 
-    public SeekSubjectAdapter(List<SubjectEntity> list, Context context) {
+    public SeekSubjectAdapter(List<SubjectsBean> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -30,7 +30,7 @@ public class SeekSubjectAdapter extends BaseAdapter {
     }
 
     @Override
-    public SubjectEntity getItem(int position) {
+    public SubjectsBean getItem(int position) {
         return list.get(position);
     }
 
@@ -50,7 +50,7 @@ public class SeekSubjectAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        holder.name.setText(list.get(position).getSub_name());
+        holder.name.setText(list.get(position).sub_name);
         return convertView;
     }
 

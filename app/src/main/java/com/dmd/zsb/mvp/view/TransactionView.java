@@ -1,16 +1,12 @@
 package com.dmd.zsb.mvp.view;
 
-import com.dmd.zsb.entity.TransactionEntity;
-import com.dmd.zsb.entity.response.TransactionResponse;
+import com.dmd.zsb.protocol.response.transactionsResponse;
 
 /**
- * Created by Administrator on 2016/4/6.
+ * Created by Administrator on 2016/5/13.
  */
-public interface TransactionView extends BaseView {
+public interface TransactionView extends BaseView{
+    void refreshListData(transactionsResponse response);
 
-    void navigateToTransactionDetail(TransactionEntity data);
-
-    void refreshListData(TransactionResponse data);
-
-    void addMoreListData(TransactionResponse data);
+    void addMoreListData(transactionsResponse response);
 }

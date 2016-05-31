@@ -24,19 +24,21 @@ import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.CommonUtils;
 import com.dmd.tutor.utils.XmlDB;
-import com.dmd.tutor.widgets.ProgressDialog;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.openim.LoginSampleHelper;
-import com.dmd.zsb.openim.Notification;
-import com.dmd.zsb.openim.NotificationInitSampleHelper;
-import com.dmd.zsb.openim.UserProfileSampleHelper;
-import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.SignInPresenterImpl;
 import com.dmd.zsb.mvp.view.SignInView;
+import com.dmd.zsb.openim.LoginHelper;
+import com.dmd.zsb.openim.Notification;
+import com.dmd.zsb.openim.NotificationInitHelper;
+import com.dmd.zsb.openim.UserProfileHelper;
+import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
 import com.dmd.zsb.widgets.ToastView;
-import com.google.gson.JsonObject;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.Bind;
 
 public class SignInActivity extends BaseActivity implements SignInView, View.OnClickListener {
@@ -56,9 +58,6 @@ public class SignInActivity extends BaseActivity implements SignInView, View.OnC
     private static final String PASSWORD = "password";
 
     public static final String AUTO_LOGIN_STATE_ACTION = "com.dmd.zsb.parent.autoLoginStateActionn";
-    private ProgressDialog progressDialog=null;
-
-
 
     private BroadcastReceiver mAutoLoginStateReceiver = new BroadcastReceiver() {
         @Override
@@ -176,20 +175,24 @@ public class SignInActivity extends BaseActivity implements SignInView, View.OnC
                     CloseKeyBoard();
                     btnLogin.setClickable(false);
                     init(etMobile.getText().toString(), getString(R.string.app_key));
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                    jsonObject.addProperty("version", Constants.ZSBVERSION);
-                    jsonObject.addProperty("location", XmlDB.getInstance(mContext).getKeyString("addr","未取得定位地址"));
-                    jsonObject.addProperty("lat", XmlDB.getInstance(mContext).getKeyFloatValue("latitude", 0)+"");
-                    jsonObject.addProperty("lon", XmlDB.getInstance(mContext).getKeyFloatValue("longitude", 0)+"");
-                    jsonObject.addProperty("client_type", Constants.PLATFORM);
-                    jsonObject.addProperty("role", Constants.USER_ROLE);
-                    jsonObject.addProperty("mobile", mobile);
-                    jsonObject.addProperty("password", password);
-                    signInPresenter.signIn(jsonObject);
+                    JSONObject jsonObject=new JSONObject();
+                    try {
+                        jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.put("version", Constants.ZSBVERSION);
+                        jsonObject.put("location", XmlDB.getInstance(mContext).getKeyString("addr","未取得定位地址"));
+                        jsonObject.put("lat", XmlDB.getInstance(mContext).getKeyFloatValue("latitude", 0)+"");
+                        jsonObject.put("lon", XmlDB.getInstance(mContext).getKeyFloatValue("longitude", 0)+"");
+                        jsonObject.put("client_type", Constants.PLATFORM);
+                        jsonObject.put("role", Constants.USER_ROLE);
+                        jsonObject.put("mobile", mobile);
+                        jsonObject.put("password", password);
 
-                    progressDialog=new ProgressDialog(mContext,getString(R.string.please_later_on));
-                    progressDialog.show();
+                    }catch (JSONException j){
+
+                    }
+                    //signInPresenter.signIn(jsonObject);
+                    signInPresenter.signIn(mobile,password);
+
                 }
                 break;
         }
@@ -203,23 +206,19 @@ public class SignInActivity extends BaseActivity implements SignInView, View.OnC
     @Override
     public void navigateToHome() {
 
-        LoginSampleHelper.getInstance().login_Sample(etMobile.getText().toString(), etPassword.getText().toString(), getString(R.string.app_key), new IWxCallback() {
+        LoginHelper.getInstance().login_Sample(etMobile.getText().toString(), etPassword.getText().toString(), getString(R.string.app_key), new IWxCallback() {
 
             @Override
             public void onSuccess(Object... arg0) {
                 saveIdPasswordToLocal(etMobile.getText().toString(), etPassword.getText().toString());
-
                 btnLogin.setClickable(true);
-                if (progressDialog!=null){
-                    progressDialog.dismiss();
-                    progressDialog=null;
-                }
                 Toast.makeText(mContext, "登录成功",Toast.LENGTH_SHORT).show();
                 YWLog.i(TAG, "login success!");
-                XmlDB.getInstance(mContext).saveKey("isLogin", true);
                 Bundle bundle=new Bundle();
                 bundle.putString(MainActivity.LOGIN_SUCCESS,"loginSuccess");
                 readyGo(MainActivity.class,bundle);
+                XmlDB.getInstance(mContext).saveKey("isLogin", true);
+                //BusHelper.post(new EventCenter(Constants.EVENT_RECOMMEND_COURSES_SIGNIN));
                 finish();
 
             }
@@ -231,14 +230,11 @@ public class SignInActivity extends BaseActivity implements SignInView, View.OnC
 
             @Override
             public void onError(int errorCode, String errorMessage) {
-                if (progressDialog!=null){
-                    progressDialog.dismiss();
-                    progressDialog=null;
-                }
+                hideLoading();
+                btnLogin.setClickable(true);
                 if (errorCode == YWLoginCode.LOGON_FAIL_INVALIDUSER) { //若用户不存在，则提示使用游客方式登陆
                    showTip(errorMessage);
                 } else {
-                    btnLogin.setClickable(true);
                     YWLog.w(TAG, "登录失败，错误码：" + errorCode + "  错误信息：" + errorMessage);
                     Notification.showToastMsg(mContext, errorMessage);
                 }
@@ -248,23 +244,19 @@ public class SignInActivity extends BaseActivity implements SignInView, View.OnC
 
     @Override
     public void showTip(String msg) {
-        if (progressDialog!=null){
-            progressDialog.dismiss();
-            progressDialog=null;
-        }
         ToastView toast = new ToastView(this, msg);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
-
+        btnLogin.setClickable(true);
     }
     //=================================================open im========================================================
     private void init(String mobile, String appKey) {
         //初始化imkit
-        LoginSampleHelper.getInstance().initIMKit(mobile, appKey);
+        LoginHelper.getInstance().initIMKit(mobile, appKey);
         //自定义头像和昵称回调初始化(如果不需要自定义头像和昵称，则可以省去)
-        UserProfileSampleHelper.initProfileCallback();
+        UserProfileHelper.initProfileCallback();
         //通知栏相关的初始化
-        NotificationInitSampleHelper.init();
+        NotificationInitHelper.init();
 
     }
     /**
@@ -280,17 +272,13 @@ public class SignInActivity extends BaseActivity implements SignInView, View.OnC
     @Override
     protected void onResume() {
         super.onResume();
-        handleAutoLoginState(LoginSampleHelper.getInstance().getAutoLoginState().getValue());
-        YWLog.i(TAG, "onResume, loginState = " + LoginSampleHelper.getInstance().getAutoLoginState().getValue());
+        handleAutoLoginState(LoginHelper.getInstance().getAutoLoginState().getValue());
+        YWLog.i(TAG, "onResume, loginState = " + LoginHelper.getInstance().getAutoLoginState().getValue());
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (progressDialog!=null){
-            progressDialog.dismiss();
-            progressDialog=null;
-        }
         myUnregisterReceiver();
     }
 
@@ -307,35 +295,25 @@ public class SignInActivity extends BaseActivity implements SignInView, View.OnC
     private void handleAutoLoginState(int loginState) {
 
         if (loginState == YWLoginState.logining.getValue()) {
-            if (progressDialog==null) {
-                progressDialog=new ProgressDialog(mContext,getString(R.string.please_later_on));
-                progressDialog.show();
-            }
+            if (btnLogin!=null)
             btnLogin.setClickable(false);
         } else if (loginState == YWLoginState.success.getValue()) {
+            if (btnLogin!=null)
             btnLogin.setClickable(true);
-            if (progressDialog!=null){
-                progressDialog.dismiss();
-                progressDialog=null;
-            }
             readyGoThenKill(MainActivity.class);
         } else {
-            YWIMKit ywimKit = LoginSampleHelper.getInstance().getIMKit();
-            if (ywimKit != null) {
-                if (ywimKit.getIMCore().getLoginState() == YWLoginState.success) {
+            YWIMKit imKit = LoginHelper.getInstance().getIMKit();
+            if (imKit != null) {
+                if (imKit.getIMCore().getLoginState() == YWLoginState.success) {
+                    if (btnLogin!=null)
                     btnLogin.setClickable(true);
-                    progressDialog.dismiss();
-                    progressDialog=null;
                     readyGoThenKill(MainActivity.class);
                     return;
                 }
             }
             //当作失败处理
+            if (btnLogin!=null)
             btnLogin.setClickable(true);
-            if (progressDialog!=null){
-                progressDialog.dismiss();
-                progressDialog=null;
-            }
         }
     }
 }

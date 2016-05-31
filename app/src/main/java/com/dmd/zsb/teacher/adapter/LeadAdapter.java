@@ -13,8 +13,6 @@ import android.widget.TextView;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.LeadActivity;
 import com.dmd.zsb.teacher.activity.MainActivity;
-import com.dmd.zsb.teacher.activity.SignInActivity;
-import com.dmd.tutor.utils.XmlDB;
 
 
 public class LeadAdapter extends PagerAdapter {
@@ -60,12 +58,7 @@ public class LeadAdapter extends PagerAdapter {
             start.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    (mContext).startActivity(intent);
-                    ((LeadActivity) mContext).overridePendingTransition(R.anim.right_in, R.anim.right_out);
-
-                    XmlDB.getInstance(mContext).saveKey("isFirstRunLead", false);
+                    (mContext).startActivity(new Intent(mContext, MainActivity.class));
                     ((LeadActivity) mContext).finish();
                 }
             });

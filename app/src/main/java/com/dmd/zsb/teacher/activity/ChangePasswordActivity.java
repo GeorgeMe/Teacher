@@ -10,13 +10,16 @@ import android.widget.TextView;
 import com.dmd.dialog.AlertDialogWrapper;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
+import com.dmd.tutor.utils.StringUtils;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.mvp.presenter.impl.ChangePasswordPresenterImpl;
 import com.dmd.zsb.mvp.view.ChangePasswordView;
+import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
-import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -99,21 +102,28 @@ public class ChangePasswordActivity extends BaseActivity implements ChangePasswo
                 finish();
                 break;
             case R.id.save:
-                if (newPassword.getText().toString()!=""){
-                    showToast("密码不能为空");
-                }else if (newPassword.getText().toString()!=""){
+                if (StringUtils.StringIsEmpty(nowPassword.getText().toString())){
+                    showToast("请输入原密码");
+                }else if (StringUtils.StringIsEmpty(newPassword.getText().toString())){
                     showToast("密码不能为空");
                 }else if (reNewPassword.getText().toString().length()<6){
                     showToast("密码不能少于6位");
                 }else if (!newPassword.getText().toString().equals(reNewPassword.getText().toString())){
                     showToast("两次密码不一致");
                 }else if (newPassword.getText().toString().equals(reNewPassword.getText().toString())){
-                    JsonObject jsonObject=new JsonObject();
-                    jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                    jsonObject.addProperty("version", Constants.ZSBVERSION);
-                    jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
-                    jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
-                    jsonObject.addProperty("newPassword",newPassword.getText().toString());
+                    JSONObject jsonObject=new JSONObject();
+                    try {
+                        jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.put("version", Constants.ZSBVERSION);
+                        jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
+                        jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
+
+                        jsonObject.put("nowPassword",nowPassword.getText().toString());
+                        jsonObject.put("newPassword",newPassword.getText().toString());
+                    }catch (JSONException j){
+
+                    }
+
                     changePasswordPresenter.onChangePassword(jsonObject);
                 }
 

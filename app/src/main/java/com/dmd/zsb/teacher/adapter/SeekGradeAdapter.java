@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-
 import com.dmd.zsb.teacher.R;
-import com.dmd.zsb.entity.GradeEntity;
+import com.dmd.zsb.protocol.table.GradesBean;
 
 import java.util.List;
 
@@ -17,10 +16,10 @@ import java.util.List;
  * Created by Administrator on 2016/1/6.
  */
 public class SeekGradeAdapter extends BaseAdapter {
-    private List<GradeEntity> list;
+    private List<GradesBean> list;
     private Context context;
 
-    public SeekGradeAdapter(List<GradeEntity> list, Context context) {
+    public SeekGradeAdapter(List<GradesBean> list, Context context) {
         this.list = list;
         this.context = context;
     }
@@ -31,7 +30,7 @@ public class SeekGradeAdapter extends BaseAdapter {
     }
 
     @Override
-    public GradeEntity getItem(int position) {
+    public GradesBean getItem(int position) {
         return list.get(position);
     }
 
@@ -51,7 +50,7 @@ public class SeekGradeAdapter extends BaseAdapter {
         } else {
             holder = (Holder) convertView.getTag();
         }
-        holder.name.setText(list.get(position).getGrade_name());
+        holder.name.setText(list.get(position).grade_name);
         return convertView;
     }
 

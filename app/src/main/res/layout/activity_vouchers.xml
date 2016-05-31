@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.dmd.zsb.teacher.activity.VouchersActivity">
+    tools:context=".activity.VouchersActivity">
 
     <include layout="@layout/top_view" />
 

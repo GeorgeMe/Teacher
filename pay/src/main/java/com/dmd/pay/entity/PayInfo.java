@@ -1,14 +1,17 @@
 package com.dmd.pay.entity;
 
+import java.io.Serializable;
+
 /**
  * Created by Administrator on 2016/4/12.
  */
-public class PayInfo {
+public class PayInfo implements Serializable {
 
     private String name;//商品名称
     private String desc;//详细描述
     private Double price;//价格
     private Double rate;//折扣
+    private String order_sn;
 
     public String getName() {
         return name;
@@ -40,5 +43,13 @@ public class PayInfo {
 
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    public String getOrder_sn() {
+        return order_sn;
+    }
+
+    public void setOrder_sn(String order_sn) {
+        this.order_sn = order_sn;
     }
 }

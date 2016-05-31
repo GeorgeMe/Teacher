@@ -1,10 +1,11 @@
 package com.dmd.zsb.mvp.presenter;
 
-import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2016/3/28.
  */
 public interface EvaluationPresenter {
-    void onEvaluation(int event_tag, JsonObject jsonObject);
+    void onEvaluation(int event_tag,JSONObject jsonObject);
 }

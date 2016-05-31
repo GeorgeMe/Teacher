@@ -5,15 +5,15 @@ import android.content.Context;
 import com.dmd.tutor.utils.OnUploadProcessListener;
 import com.dmd.zsb.mvp.interactor.impl.SettingInteracterImpl;
 import com.dmd.zsb.mvp.listeners.BaseMultiLoadedListener;
-import com.dmd.zsb.mvp.listeners.BaseSingleLoadedListener;
 import com.dmd.zsb.mvp.presenter.SettingPresenter;
 import com.dmd.zsb.mvp.view.SettingView;
-import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2016/3/25.
  */
-public class SettingPresenterImpl implements SettingPresenter,BaseMultiLoadedListener<JsonObject> {
+public class SettingPresenterImpl implements SettingPresenter,BaseMultiLoadedListener<JSONObject> {
     private Context mContext=null;
     private SettingInteracterImpl settingInteracter;
     private SettingView settingView;
@@ -26,17 +26,25 @@ public class SettingPresenterImpl implements SettingPresenter,BaseMultiLoadedLis
     }
 
     @Override
-    public void uploadAvatar(int event,JsonObject jsonObject) {
+    public void uploadAvatar(int event,JSONObject jsonObject) {
+        settingView.showLoading(null);
         settingInteracter.getCommonListData(event,jsonObject);
     }
 
     @Override
-    public void onSuccess(int event,JsonObject data) {
-        settingView.showTip(data.get("msg").getAsString());
+    public void onSuccess(int event,JSONObject data) {
+        settingView.hideLoading();
+        if (event==1){
+            settingView.showTip(data.optString("msg"));
+        }else {
+
+        }
+
     }
 
     @Override
     public void onError(String msg) {
+        settingView.hideLoading();
         settingView.showError(msg);
     }
 
@@ -46,7 +54,8 @@ public class SettingPresenterImpl implements SettingPresenter,BaseMultiLoadedLis
     }
 
     @Override
-    public void onSignOut(int event,JsonObject jsonObject) {
+    public void onSignOut(int event,JSONObject jsonObject) {
+        settingView.showLoading(null);
         settingInteracter.onSignOut(event,jsonObject);
     }
 }

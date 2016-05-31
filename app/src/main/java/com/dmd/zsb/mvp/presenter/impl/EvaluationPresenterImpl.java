@@ -3,17 +3,20 @@ package com.dmd.zsb.mvp.presenter.impl;
 import android.content.Context;
 
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.entity.response.EvaluationResponse;
 import com.dmd.zsb.mvp.interactor.impl.EvaluationInteractorImpl;
 import com.dmd.zsb.mvp.listeners.BaseMultiLoadedListener;
 import com.dmd.zsb.mvp.presenter.EvaluationPresenter;
 import com.dmd.zsb.mvp.view.EvaluationView;
-import com.google.gson.JsonObject;
+import com.dmd.zsb.protocol.request.evaluationRequest;
+import com.dmd.zsb.protocol.response.evaluationResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by Administrator on 2016/3/29.
  */
-public class EvaluationPresenterImpl implements EvaluationPresenter,BaseMultiLoadedListener<EvaluationResponse> {
+public class EvaluationPresenterImpl implements EvaluationPresenter,BaseMultiLoadedListener<evaluationResponse> {
 
     private Context mContext;
     private EvaluationView evaluationView;
@@ -26,21 +29,31 @@ public class EvaluationPresenterImpl implements EvaluationPresenter,BaseMultiLoa
     }
 
     @Override
-    public void onEvaluation(int event_tag,JsonObject jsonObject) {
-        evaluationInteractor.getCommonListData(event_tag,jsonObject);
+    public void onEvaluation(int event_tag,JSONObject jsonObject) {
+        evaluationView.showLoading(null);
+        evaluationRequest request=new evaluationRequest();
+        try {
+            request.fromJson(jsonObject);
+            evaluationInteractor.getCommonListData(event_tag,request.toJson());
+        }catch (JSONException j){
+
+        }
+
     }
 
     @Override
-    public void onSuccess(int event_tag, EvaluationResponse data) {
+    public void onSuccess(int event_tag, evaluationResponse response) {
+        evaluationView.hideLoading();
         if (event_tag== Constants.EVENT_LOAD_MORE_DATA){
-            evaluationView.addMoreListData(data);
+            evaluationView.addMoreListData(response);
         }else if (event_tag==Constants.EVENT_REFRESH_DATA){
-            evaluationView.refreshListData(data);
+            evaluationView.refreshListData(response);
         }
     }
 
     @Override
     public void onError(String msg) {
+        evaluationView.hideLoading();
         evaluationView.showError(msg);
     }
 

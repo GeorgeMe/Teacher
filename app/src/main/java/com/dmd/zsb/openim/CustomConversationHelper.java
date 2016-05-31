@@ -1,13 +1,10 @@
 package com.dmd.zsb.openim;
 
-import java.util.Date;
-
-import com.alibaba.mobileim.YWIMKit;
-import com.alibaba.mobileim.channel.util.WxLog;
 import com.alibaba.mobileim.conversation.IYWConversationService;
 import com.alibaba.mobileim.conversation.YWConversation;
 import com.alibaba.mobileim.conversation.YWCustomConversationUpdateModel;
-import com.alibaba.mobileim.lib.model.conversation.ConversationConstPrefix;
+
+import java.util.Date;
 
 /**
  * 会话列表增加一个自定义会话
@@ -26,8 +23,7 @@ public class CustomConversationHelper {
         mCustomConversation.setContent(content);
         mCustomConversation.setLastestTime(new Date().getTime());
 
-        YWIMKit imKit = LoginSampleHelper.getInstance().getIMKit();
-        IYWConversationService conversationService = imKit.getConversationService();
+        IYWConversationService conversationService = LoginHelper.getInstance().getIMKit().getConversationService();
         YWConversation conversation = conversationService.getCustomConversationByConversationId(conversationID);
         if (conversation != null){
             conversation.getUnreadCount();
@@ -45,8 +41,7 @@ public class CustomConversationHelper {
         mCustomViewConversation.setContent(content);
         mCustomViewConversation.setLastestTime(new Date().getTime());
 
-        YWIMKit imKit = LoginSampleHelper.getInstance().getIMKit();
-        IYWConversationService conversationService = imKit.getConversationService();
+        IYWConversationService conversationService = LoginHelper.getInstance().getIMKit().getConversationService();
         if (conversationService.getCustomViewConversationByConversationId(conversationID) == null) {
             conversationService.updateOrCreateCustomViewConversation(mCustomViewConversation);
         }
@@ -58,8 +53,7 @@ public class CustomConversationHelper {
         mCustomConversation.setContent(content);
         mCustomConversation.setLastestTime(new Date().getTime());
 
-        YWIMKit imKit = LoginSampleHelper.getInstance().getIMKit();
-        IYWConversationService conversationService = imKit.getConversationService();
+        IYWConversationService conversationService = LoginHelper.getInstance().getIMKit().getConversationService();
         conversationService.updateOrCreateCustomConversation(mCustomConversation);
     }
 
@@ -69,8 +63,7 @@ public class CustomConversationHelper {
         mCustomViewConversation.setContent(content);
         mCustomViewConversation.setLastestTime(new Date().getTime());
 
-        YWIMKit imKit = LoginSampleHelper.getInstance().getIMKit();
-        IYWConversationService conversationService = imKit.getConversationService();
+        IYWConversationService conversationService = LoginHelper.getInstance().getIMKit().getConversationService();
         conversationService.updateOrCreateCustomViewConversation(mCustomViewConversation);
     }
 }

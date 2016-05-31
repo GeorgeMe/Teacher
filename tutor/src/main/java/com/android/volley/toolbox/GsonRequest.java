@@ -54,8 +54,7 @@ public class GsonRequest<T> extends Request<T> {
     private Type mType = null;
     private Gson mGson = null;
 
-    public GsonRequest(int method, String url, String requestBody, Type type, Listener<T> listener,
-                       ErrorListener errorListener) {
+    public GsonRequest(int method, String url, String requestBody, Type type, Listener<T> listener,ErrorListener errorListener) {
         super(method, url, errorListener);
         mType = type;
         mListener = listener;
@@ -64,8 +63,7 @@ public class GsonRequest<T> extends Request<T> {
         mGson = new Gson();
     }
 
-    public GsonRequest(String url, String requestBody, Type type, Listener<T> listener,
-                       ErrorListener errorListener) {
+    public GsonRequest(String url, String requestBody, Type type, Listener<T> listener,ErrorListener errorListener) {
         this(Method.GET, url, requestBody, type, listener, errorListener);
     }
 
@@ -77,13 +75,16 @@ public class GsonRequest<T> extends Request<T> {
     @Override
     protected Response<T> parseNetworkResponse(NetworkResponse response) {
         try {
-            String jsonString = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
 
+
+            String jsonString = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
             VolleyLog.d(TAG, "response ---> " + jsonString);
             return Response.success((T) mGson.fromJson(jsonString, mType), HttpHeaderParser.parseCacheHeaders(response));
+
         } catch (UnsupportedEncodingException e) {
             return Response.error(new VolleyError(e));
         }
+
     }
 
     ;

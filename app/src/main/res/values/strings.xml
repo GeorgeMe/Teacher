@@ -1,23 +1,30 @@
 <resources>
     <string name="app_name">择师宝教师端</string>
 
-    <!--按钮-->
-    <string name="confirm">确定</string>
-    <string name="cancel">取消</string>
-    <string name="save">保存</string>
 
     <string name="experience_edition">立即体验</string>
-    <string name="double_click_exit">再按一次退出</string>
-    <!--splash-->
+
     <string name="splash_copyright">Copyright &#169; 2016重庆多米多网络科技</string>
     <string name="splash_slogan">口袋里的家教圈</string>
     <string name="splash_version">V %1$s</string>
-    <!--登录-->
+
+    <string name="home_bar_lbs">定位</string>
+    <string name="home_bar_title">首页</string>
+    <string name="home_bar_demand">发布需求</string>
+    <string name="double_click_exit">再按一次退出</string>
+
+    <string name="mine_bar_title">我的</string>
+    <string name="mine_wallet_title">钱包</string>
+    <string name="mine_about_us_title">关于我们</string>
+    <string name="mine_good_at_subjects_lab">擅长科目：</string>
+    <string name="mine_good_at_subjects">高中英语、高中语文、高中数学、初中...</string>
+    <string name="mine_modify_data">修改资料></string>
+
     <string name="password">密码</string>
     <string name="mobile_phone">手机号</string>
     <string name="login">登录</string>
     <string name="exit">退出登录</string>
-    <string name="no_account_now_signup">没有账户？现在注册</string>
+
     <string name="please_input_mobile_phone">手机号码不能为空</string>
     <string name="please_input_password">密码不能为空</string>
     <string name="wrong_mobile_phone">手机号码输入不正确</string>
@@ -25,29 +32,32 @@
     <string name="mobile_phone_or_password_error">手机号或密码错误</string>
     <string name="please_input_verify_code">验证码不能为空</string>
 
+    <string name="no_account_now_signup">没有账户？现在注册</string>
     <string name="verify_code">验证码</string>
-    <string name="get_verify_code">获取验证码</string>
+    <string name="get_vetify_code">获取验证码</string>
     <string name="next">下一步</string>
     <string name="haved_account_login_now">已有账户？现在登录</string>
 
+    <string name="nickname">昵称</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="complete_signup">完成注册</string>
 
     <string name="please_input_nickname">昵称不能为空</string>
     <string name="nickname_wrong_format_hint">"昵称一般由1-16位字符组成</string>
     <string name="password_wrong_format_hint">"密码必须有6-20位字符组成"</string>
     <string name="two_passwords_differ_hint">"请注意两次密码输入不一致哦"</string>
-    <!--注册-->
-    <string name="nickname">昵称</string>
-    <string name="confirm_password">确认密码</string>
-    <string name="complete_signup">完成注册</string>
+    <string name="price_subjects">预约科目</string>
+    <string name="price_scope">价格范围</string>
+    <string name="appointment_time">预约时间</string>
+    <string name="sevice_location">服务地点</string>
+    <string name="publish_order">发布需求</string>
+    <string name="appoint_location">预约地点</string>
+    <string name="yuan">元</string>
+    <string name="choose_time">"选择时间"</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
 
-    <string name="home_bar_lbs">定位</string>
-    <string name="home_bar_title">首页</string>
-    <string name="home_bar_demand">发布需求</string>
-
-    <!--标题-->
     <string name="setting_title">设置</string>
-
-    <!--设置-->
     <string name="avatar">我的头像</string>
     <string name="brief">我的简介</string>
     <string name="signature">个性签名</string>
@@ -55,16 +65,28 @@
     <string name="feedback">意见反馈</string>
     <string name="aboutus">关于我们</string>
     <string name="complain">欢迎指导建议！</string>
-    <!--修改密码-->
+
     <string name="older_password">旧密码</string>
     <string name="input_old_password">输入旧密码</string>
     <string name="new_password">新密码</string>
     <string name="input_new_password">输入新密码</string>
     <string name="confirm_new_password">确认新密码</string>
-    <!--修改签名-->
+    <string name="save">保存</string>
     <string name="personal_signature">个人签名</string>
     <string name="personal_brief">个人简介</string>
 
-    <string name="mine_good_at_subjects">高中英语、高中语文、高中数学、初中...</string>
-    <string name="mine_modify_data">修改资料></string>
+    <string name="price_range">"请输入价格范围"</string>
+    <string name="right_price">"请输入正确价格"</string>
+    <string name="appoint_time">"请选择预约时间"</string>
+    <string name="wrong_appoint_time_hint">"预约时间要大于当前时间"</string>
+
+    <string name="appoint_location_hint">"请输入预约地点"</string>
+    <string name="get_verify_code_again">重新获取验证码</string>
+    <string name="resend_after">秒后重新发送</string>
+
+
+    <string name="photo_choose">图片选择</string>
+    <string name="camera">相机拍摄</string>
+    <string name="album">本地图片</string>
+    <string name="photo_not_exsit">图片不存在</string>
 </resources>

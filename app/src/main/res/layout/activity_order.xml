@@ -4,7 +4,7 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
-tools:context="com.dmd.zsb.teacher.activity.OrderActivity">
+tools:context=".activity.OrderActivity">
 <include layout="@layout/top_view"
     android:layout_width="match_parent"
     android:layout_height="48dp"/>
@@ -23,7 +23,7 @@ tools:context="com.dmd.zsb.teacher.activity.OrderActivity">
         android:drawableTop="@drawable/radio_button_drawable_top"
         android:drawableBottom="@drawable/radio_button_drawable_bottom"
         android:button="@null"
-        android:text="未完成"
+        android:text="未付款"
         android:gravity="center"
         android:textSize="18sp" />
 
@@ -42,7 +42,7 @@ tools:context="com.dmd.zsb.teacher.activity.OrderActivity">
         android:layout_gravity="center"
         android:button="@null"
         android:gravity="center"
-        android:text="已完成"
+        android:text="已付款"
         android:textSize="18sp" />
 </RadioGroup>
 <View

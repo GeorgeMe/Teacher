@@ -1,17 +1,23 @@
 package com.dmd.zsb.teacher.activity;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.dmd.dialog.DialogAction;
 import com.dmd.dialog.GravityEnum;
 import com.dmd.dialog.MaterialDialog;
 import com.dmd.tutor.eventbus.EventCenter;
@@ -19,22 +25,34 @@ import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.OnUploadProcessListener;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.mvp.presenter.impl.SettingPresenterImpl;
-import com.dmd.zsb.mvp.view.SettingView;
+import com.dmd.zsb.mvp.presenter.impl.ChangeAvatarPresenterImpl;
+import com.dmd.zsb.mvp.presenter.impl.SignOutPresenterImpl;
+import com.dmd.zsb.mvp.view.ChangeAvatarView;
+import com.dmd.zsb.mvp.view.SignOutView;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
-import com.google.gson.JsonObject;
+import com.dmd.zsb.utils.ImageUtil;
+import com.dmd.zsb.widgets.ToastView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SettingActivity extends BaseActivity implements SettingView, OnUploadProcessListener {
+public class SettingActivity extends BaseActivity implements ChangeAvatarView,SignOutView,OnUploadProcessListener{
 
-    private final static int ACTION_PHOTOGRAPH = 1;
-    private final static int ACTION_ALBUM = 2;
+    private Dialog mDialog;
+    private File mFileDir;
+    private File mFile;
+    private String mFileName = "";
+    private final int REQUEST_CAMERA = 1;
+    private final int REQUEST_PHOTO = 2;
+    private final int REQUEST_PHOTOZOOM = 3;
+    private File mFileZoomDir;
+    private String mImagePath;
 
     @Bind(R.id.top_bar_back)
     TextView topBarBack;
@@ -52,16 +70,13 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
     TextView tvSettingChangePassword;
     @Bind(R.id.tv_setting_feedback)
     TextView tvSettingFeedback;
-    @Bind(R.id.tv_setting_about_us)
-    TextView tvSettingAboutUs;
     @Bind(R.id.btn_sign_out)
     Button btnSignOut;
-    @Bind(R.id.tv_setting_subjects)
-    TextView tvSettingSubjects;
-    private SettingPresenterImpl settingPresenter;
+
+
+    private ChangeAvatarPresenterImpl changeAvatarPresenter;
+    private SignOutPresenterImpl signOutPresenter;
     private MaterialDialog dialog;
-    private File file = null;
-    private String picturePath = null;
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -85,8 +100,19 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
 
     @Override
     protected void initViewsAndEvents() {
-        settingPresenter = new SettingPresenterImpl(SettingActivity.this, this, this);
+        changeAvatarPresenter=new ChangeAvatarPresenterImpl(this,mContext,this);
+        ///settingPresenter=new SettingPresenterImpl(SettingActivity.this,this,this);
         topBarTitle.setText(getResources().getText(R.string.setting_title));
+        if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+            btnSignOut.setVisibility(View.GONE);
+        }else {
+            btnSignOut.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void showTip(String msg) {
+        showToast(msg);
     }
 
     @Override
@@ -119,89 +145,90 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
         return null;
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 101 && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = {MediaStore.Images.Media.DATA};
-            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-
-            picturePath = cursor.getString(columnIndex);
-            cursor.close();
-            file = new File(picturePath);
-            if (file != null && file.exists()) {
-
-                JsonObject jsonObject = new JsonObject();
-                JsonObject json = new JsonObject();
-                json.addProperty("appkey", Constants.ZSBAPPKEY);
-                json.addProperty("version", Constants.ZSBVERSION);
-                json.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-                json.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                json.addProperty("fileName", file.getName());
-                json.addProperty("fileMime", "image/png");
-
-                JsonObject formFile = new JsonObject();
-                formFile.addProperty("fileName", file.getName());
-                formFile.addProperty("filePath", file.getAbsolutePath());
-                formFile.addProperty("parameterName", "file");
-                formFile.addProperty("contentType", "application/octet-stream");
-
-                jsonObject.add("json", json);
-                jsonObject.add("formFile", formFile);
-                settingPresenter.uploadAvatar(1, jsonObject);
-            } else {
-                Message msg = Message.obtain();
-                msg.what = 3;
-                msg.arg1 = 10;
-                msg.obj = "图片文件未找到";
-                handler.sendMessage(msg);
-            }
-        }
-    }
-
-    @OnClick({R.id.top_bar_back,R.id.tv_setting_subjects, R.id.tv_setting_nickname, R.id.tv_setting_avatar, R.id.tv_setting_signature, R.id.tv_setting_brief, R.id.tv_setting_change_password, R.id.tv_setting_feedback, R.id.tv_setting_about_us, R.id.btn_sign_out})
+    @OnClick({R.id.top_bar_back, R.id.tv_setting_nickname, R.id.tv_setting_avatar, R.id.tv_setting_signature, R.id.tv_setting_brief, R.id.tv_setting_change_password, R.id.tv_setting_feedback, R.id.btn_sign_out})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.top_bar_back:
                 finish();
                 break;
             case R.id.tv_setting_nickname:
-                readyGo(NickNameActivity.class);
-                break;
-            case R.id.tv_setting_subjects:
-                readyGo(SubjectActivity.class);
+                if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+                    readyGo(NickNameActivity.class);
+                }else {
+                    showToast("请先登录");
+                }
                 break;
             case R.id.tv_setting_avatar:
-                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, 101);
+                if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+                    showDialog();
+                }else {
+                    showToast("请先登录");
+                }
                 break;
             case R.id.tv_setting_signature:
-                readyGo(SignatureActivity.class);
+                if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+                    readyGo(SignatureActivity.class);
+                }else {
+                    showToast("请先登录");
+                }
                 break;
             case R.id.tv_setting_brief:
-                readyGo(BriefActivity.class);
+                if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+                    readyGo(BriefActivity.class);
+                }else {
+                    showToast("请先登录");
+                }
                 break;
             case R.id.tv_setting_change_password:
-                readyGo(ChangePasswordActivity.class);
+                if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+                    readyGo(ChangePasswordActivity.class);
+                }else {
+                    showToast("请先登录");
+                }
                 break;
             case R.id.tv_setting_feedback:
-                readyGo(FeedbackActivity.class);
-                break;
-            case R.id.tv_setting_about_us:
-                readyGo(AboutUsActivity.class);
+                if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin",false)){
+                    readyGo(FeedbackActivity.class);
+                }else {
+                    showToast("请先登录");
+                }
                 break;
             case R.id.btn_sign_out:
-                JsonObject json = new JsonObject();
-                json.addProperty("appkey", Constants.ZSBAPPKEY);
-                json.addProperty("version", Constants.ZSBVERSION);
-                json.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-                json.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                settingPresenter.onSignOut(1, json);
+                    new MaterialDialog.Builder(mContext).title("提示").content("确认要退出登录？").negativeText("取消").positiveText("确认").onNegative(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            dialog.dismiss();
+                        }
+                    }).onPositive(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            onSignOutView();
+                            dialog.dismiss();
+                        }
+                    }).show();
                 break;
         }
+    }
+    @Override
+    public void onSignOutView() {
+        signOutPresenter=new SignOutPresenterImpl(this,mContext);
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
+            signOutPresenter.onSignOut(jsonObject);
+        }catch (JSONException j){
+
+        }
+
+    }
+
+    @Override
+    public void onSuccess() {
+        showTip("退出成功");
+        finish();
     }
 
     @Override
@@ -230,10 +257,6 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
         handler.sendMessage(msg);
     }
 
-    @Override
-    public void showTip(String msg) {
-        showToast(msg);
-    }
 
     @Override
     public void showError(String msg) {
@@ -241,14 +264,13 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
     }
 
     private Handler handler = new Handler() {
-        private int length = 0;
-
+        private  int length=0;
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1://开始打开进度对话框
-                    length = msg.arg1;
-                    dialog = new MaterialDialog.Builder(SettingActivity.this)
+                    length=msg.arg1;
+                    dialog= new MaterialDialog.Builder(SettingActivity.this)
                             .title("上传进度")
                             .content("请稍后...")
                             .contentGravity(GravityEnum.CENTER)
@@ -267,8 +289,8 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
                             }).show();
                     break;
                 case 2://进度
-                    int i = msg.arg1 * 100 / length;
-                    if (i % 10 == 0) {
+                    int i=msg.arg1*100/length;
+                    if(i%10==0){
                         dialog.setProgress(i);
                     }
                     break;
@@ -279,6 +301,7 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
                             break;
                         }
                         case 11: {
+                            XmlDB.getInstance(mContext).saveKey("ChangeAvatar",true);
                             showToast(msg.obj.toString());
                             break;
                         }
@@ -288,10 +311,129 @@ public class SettingActivity extends BaseActivity implements SettingView, OnUplo
                         }
                     }
                     dialog.dismiss();
-                    dialog = null;
+                    dialog=null;
                     break;
             }
         }
     };
+
+    private void showDialog() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.photo_dialog, null);
+        mDialog = new Dialog(this, R.style.dialog);
+        mDialog.setContentView(view);
+
+        mDialog.setCanceledOnTouchOutside(true);
+        mDialog.show();
+        LinearLayout requsetCameraLayout = (LinearLayout) view.findViewById(R.id.register_camera);
+        LinearLayout requestPhotoLayout = (LinearLayout) view.findViewById(R.id.register_photo);
+
+        requsetCameraLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                mDialog.dismiss();
+                if (mFileDir == null) {
+                    mFileDir = new File(Constants.FILEPATH + "img/");
+                    if (!mFileDir.exists()) {
+                        mFileDir.mkdirs();
+                    }
+                }
+                mFileName = Constants.FILEPATH + "img/" + "temp.jpg";
+                mFile = new File(mFileName);
+                Uri imageuri = Uri.fromFile(mFile);
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageuri);
+                intent.putExtra("return-data", false);
+                startActivityForResult(intent, REQUEST_CAMERA);
+            }
+        });
+
+        requestPhotoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                mDialog.dismiss();
+                Intent picture = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(picture, REQUEST_PHOTO);
+
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CAMERA) {
+                File files = new File(mFileName);
+                if (files.exists()) {
+                    mImagePath = mFileName;
+                    mImagePath = startPhotoZoom(Uri.fromFile(new File(mImagePath)));
+                }
+            } else if (requestCode == REQUEST_PHOTO) {
+                Uri selectedImage = data.getData();
+                mImagePath = startPhotoZoom(selectedImage);
+            } else if (requestCode == REQUEST_PHOTOZOOM) {
+                File f = new File(mImagePath);
+                if (f.exists()) {
+                    File file = new File(ImageUtil.zoomImage(mImagePath, 350));
+                    JSONObject jsonObject=new JSONObject();
+                    JSONObject formFile=new JSONObject();
+                    try {
+                        jsonObject.put("appkey", Constants.ZSBAPPKEY);
+                        jsonObject.put("version", Constants.ZSBVERSION);
+                        jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid","sid"));
+                        jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid","uid"));
+                        jsonObject.put("fileMime", "image/png");
+
+                        formFile.put("fileName",file.getName());
+                        formFile.put("filePath",file.getAbsolutePath());
+                        formFile.put("parameterName","file");
+                        formFile.put("contentType","application/octet-stream");
+
+
+                    }catch (JSONException j){
+
+                    }
+                    changeAvatarPresenter.onChangeAvatar(jsonObject,formFile);
+                } else {
+                    ToastView toast = new ToastView(this, getString(R.string.photo_not_exsit));
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                }
+            }
+        }
+    }
+
+    private String startPhotoZoom(Uri uri) {
+
+        if (mFileZoomDir == null) {
+            mFileZoomDir = new File(Constants.FILEPATH + "img/");
+            if (!mFileZoomDir.exists()) {
+                mFileZoomDir.mkdirs();
+            }
+        }
+
+        String fileName;
+        fileName = "/temp.jpg";
+
+        String filePath = mFileZoomDir + fileName;
+        File loadingFile = new File(filePath);
+
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 400);
+        intent.putExtra("aspectY", 400);
+        intent.putExtra("output", Uri.fromFile(loadingFile));// 输出到文件
+        intent.putExtra("outputFormat", "PNG");// 返回格式
+        intent.putExtra("noFaceDetection", true); // 去除面部检测
+        intent.putExtra("return-data", false); // 不要通过Intent传递截获的图片
+        startActivityForResult(intent, REQUEST_PHOTOZOOM);
+
+        return filePath;
+
+    }
 
 }

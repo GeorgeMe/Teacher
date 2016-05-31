@@ -1,59 +1,54 @@
 package com.dmd.zsb.teacher.activity;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dmd.dialog.AlertDialogWrapper;
+import com.dmd.tutor.adapter.ListViewDataAdapter;
+import com.dmd.tutor.adapter.ViewHolderBase;
+import com.dmd.tutor.adapter.ViewHolderCreator;
 import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.utils.XmlDB;
-import com.dmd.zsb.api.ApiConstants;
+import com.dmd.tutor.widgets.XSwipeRefreshLayout;
 import com.dmd.zsb.common.Constants;
-import com.dmd.zsb.entity.TransactionEntity;
-import com.dmd.zsb.mvp.presenter.impl.TransactionDetailPresenterImpl;
-import com.dmd.zsb.mvp.view.TransactionDetailView;
+import com.dmd.zsb.mvp.presenter.impl.TransactionPresenterImpl;
+import com.dmd.zsb.mvp.view.TransactionView;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
-import com.google.gson.JsonObject;
-import com.squareup.picasso.Picasso;
+import com.dmd.zsb.protocol.response.transactionsResponse;
+import com.dmd.zsb.protocol.table.TransactionsBean;
+import com.dmd.zsb.utils.UriHelper;
+import com.dmd.zsb.widgets.LoadMoreListView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class TransactionDetailActivity extends BaseActivity implements TransactionDetailView{
+public class TransactionDetailActivity extends BaseActivity implements TransactionView , LoadMoreListView.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener{
 
     @Bind(R.id.top_bar_back)
     TextView topBarBack;
     @Bind(R.id.top_bar_title)
     TextView topBarTitle;
-    @Bind(R.id.img_header)
-    ImageView imgHeader;
-    @Bind(R.id.tv_appointed_time)
-    TextView tvAppointedTime;
-    @Bind(R.id.tv_charging)
-    TextView tvCharging;
-    @Bind(R.id.tv_subject)
-    TextView tvSubject;
-    @Bind(R.id.tv_address)
-    TextView tvAddress;
-    @Bind(R.id.tv_type)
-    TextView tvType;
-    @Bind(R.id.tv_note)
-    TextView tvNote;
-    @Bind(R.id.btn_refuse)
-    Button btnRefuse;
-    @Bind(R.id.btn_accept)
-    Button btnAccept;
-    private TransactionEntity data;
-    private TransactionDetailPresenterImpl transactionDetailPresenter;
+    @Bind(R.id.transaction_detail_list_list_view)
+    LoadMoreListView transactionDetailListListView;
+    @Bind(R.id.transaction_detail_list_swipe_layout)
+    XSwipeRefreshLayout transactionDetailListSwipeLayout;
 
+    private TransactionPresenterImpl transactionPresenter;
+    private ListViewDataAdapter<TransactionsBean> mListViewDataAdapter;
+
+    private int page =1;
+    public String   buyer_id;
     @Override
     protected void getBundleExtras(Bundle extras) {
-        data = (TransactionEntity) extras.getSerializable("data");
+        buyer_id=extras.getString("buyer_id");
     }
 
     @Override
@@ -68,19 +63,70 @@ public class TransactionDetailActivity extends BaseActivity implements Transacti
 
     @Override
     protected View getLoadingTargetView() {
-        return null;
+        return transactionDetailListSwipeLayout;
     }
 
     @Override
     protected void initViewsAndEvents() {
-        topBarTitle.setText("需求详情");
-        Picasso.with(mContext).load(ApiConstants.Urls.API_IMG_BASE_URLS+data.getImg_header()).into(imgHeader);
-        tvAppointedTime.setText(data.getAppointed_time());
-        tvCharging.setText(data.getCharging());
-        tvSubject.setText(data.getCurriculum());
-        tvAddress.setText(data.getAddress());
-        tvType.setText(data.getName());
-        tvNote.setText(data.getNote());
+        topBarTitle.setText("交易明细");
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+            jsonObject.put("buyer_id", buyer_id);
+            jsonObject.put("page",1);
+            jsonObject.put("rows", UriHelper.PAGE_LIMIT);
+        }catch (JSONException j){
+
+        }
+        transactionPresenter=new TransactionPresenterImpl(mContext,this);
+        transactionPresenter.onTransaction(Constants.EVENT_REFRESH_DATA, jsonObject);
+        mListViewDataAdapter=new ListViewDataAdapter<TransactionsBean>(new ViewHolderCreator<TransactionsBean>() {
+
+            @Override
+            public ViewHolderBase<TransactionsBean> createViewHolder(int position) {
+                return new ViewHolderBase<TransactionsBean>() {
+                    TextView out_trade_no,subject,body,gmt_payment,total_fee,trade_status;
+                    @Override
+                    public View createView(LayoutInflater layoutInflater) {
+                        View view=layoutInflater.inflate(R.layout.transaction_detail_item,null);
+                        out_trade_no=ButterKnife.findById(view, R.id.out_trade_no);
+                        subject=ButterKnife.findById(view, R.id.subject);
+                        gmt_payment=ButterKnife.findById(view, R.id.gmt_payment);
+                        total_fee=ButterKnife.findById(view, R.id.total_fee);
+                        trade_status=ButterKnife.findById(view, R.id.trade_status);
+                        body=ButterKnife.findById(view, R.id.body);
+                        return view;
+                    }
+
+                    @Override
+                    public void showData(int position, TransactionsBean itemData) {
+                        out_trade_no.setText(itemData.out_trade_no);
+                        subject.setText(itemData.subject);
+                        gmt_payment.setText(itemData.gmt_payment);
+                        total_fee.setText(itemData.total_fee);
+                        if ("TRADE_SUCCESS".equals(itemData.trade_status)){
+                            trade_status.setText("交易成功");
+                        }else if ("WAIT_BUYER_PAY".equals(itemData.trade_status)){
+                            trade_status.setText("交易成功");
+                        }
+                        body.setText(itemData.body);
+                    }
+                };
+            }
+        });
+
+        transactionDetailListListView.setAdapter(mListViewDataAdapter);
+        transactionDetailListListView.setOnLoadMoreListener(this);
+
+        transactionDetailListSwipeLayout.setColorSchemeColors(
+                getResources().getColor(R.color.gplus_color_1),
+                getResources().getColor(R.color.gplus_color_2),
+                getResources().getColor(R.color.gplus_color_3),
+                getResources().getColor(R.color.gplus_color_4));
+        transactionDetailListSwipeLayout.setOnRefreshListener(this);
     }
 
     @Override
@@ -113,44 +159,78 @@ public class TransactionDetailActivity extends BaseActivity implements Transacti
         return null;
     }
 
-    @OnClick({R.id.top_bar_back, R.id.btn_refuse, R.id.btn_accept})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.top_bar_back:
-                finish();
-                break;
-            case R.id.btn_refuse:
+    @OnClick(R.id.top_bar_back)
+    public void onClick() {
+        finish();
+    }
 
-                break;
-            case R.id.btn_accept:
-                transactionDetailPresenter=new TransactionDetailPresenterImpl(mContext,this);
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("appkey", Constants.ZSBAPPKEY);
-                jsonObject.addProperty("version", Constants.ZSBVERSION);
-                jsonObject.addProperty("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
-                jsonObject.addProperty("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                jsonObject.addProperty("oid",data.getOid());
-                transactionDetailPresenter.onAcceptOrder(jsonObject);
-                break;
+    @Override
+    public void onLoadMore() {
+        page=page+1;
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+            jsonObject.put("buyer_id", buyer_id);
+            jsonObject.put("page",page);
+            jsonObject.put("rows", UriHelper.PAGE_LIMIT);
+        }catch (JSONException j){
+
+        }
+        transactionPresenter.onTransaction(Constants.EVENT_LOAD_MORE_DATA, jsonObject);
+    }
+
+    @Override
+    public void onRefresh() {
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+            jsonObject.put("buyer_id", buyer_id);
+            jsonObject.put("page",1);
+            jsonObject.put("rows", UriHelper.PAGE_LIMIT);
+        }catch (JSONException j){
+
+        }
+        transactionPresenter.onTransaction(Constants.EVENT_REFRESH_DATA, jsonObject);
+    }
+
+    @Override
+    public void refreshListData(transactionsResponse response) {
+        if (transactionDetailListSwipeLayout != null)
+            transactionDetailListSwipeLayout.setRefreshing(false);
+        if (response.transactions != null) {
+            if (response.transactions.size() >= 1) {
+                if (mListViewDataAdapter != null) {
+                    mListViewDataAdapter.getDataList().clear();
+                    mListViewDataAdapter.getDataList().addAll(response.transactions);
+                    mListViewDataAdapter.notifyDataSetChanged();
+                }
+            }
+            if (UriHelper.getInstance().calculateTotalPages(response.total_count) > page)
+                transactionDetailListListView.setCanLoadMore(true);
+            else
+                transactionDetailListListView.setCanLoadMore(false);
         }
     }
 
     @Override
-    public void navigateToTransaction() {
-        new AlertDialogWrapper.Builder(this)
-                .setTitle(R.string.title)
-                .setMessage("您已接单，请做好备课准备，完成授课")
-                .setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        finish();
-                    }
-                }).show();
-    }
-
-    @Override
-    public void showTip(String msg) {
-        showToast(msg);
+    public void addMoreListData(transactionsResponse response) {
+        if (transactionDetailListListView != null)
+            transactionDetailListListView.onLoadMoreComplete();
+        if (response.transactions != null) {
+            if (mListViewDataAdapter != null) {
+                mListViewDataAdapter.getDataList().addAll(response.transactions);
+                mListViewDataAdapter.notifyDataSetChanged();
+            }
+            if (UriHelper.getInstance().calculateTotalPages(response.total_count) > page)
+                transactionDetailListListView.setCanLoadMore(true);
+            else
+                transactionDetailListListView.setCanLoadMore(false);
+        }
     }
 }
