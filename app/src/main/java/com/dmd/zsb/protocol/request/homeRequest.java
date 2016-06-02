@@ -22,11 +22,12 @@ public class homeRequest extends SugarRecord implements Serializable {
     public int   rows;
     public String   subid;
     public int  sort;
+    public int   order_status;
     public homeRequest() {
         super();
     }
 
-    public homeRequest(String appkey, String version, String sid, String uid, int page, int rows, String subid,int  sort) {
+    public homeRequest(String appkey, String version, String sid, String uid, int page, int rows, String subid,int  sort,int   order_status) {
         super();
         this.appkey = appkey;
         this.version = version;
@@ -35,6 +36,7 @@ public class homeRequest extends SugarRecord implements Serializable {
         this.page = page;
         this.rows = rows;
         this.sort = sort;
+        this.order_status = order_status;
         this.subid = subid;
     }
 
@@ -52,6 +54,7 @@ public class homeRequest extends SugarRecord implements Serializable {
         this.page = jsonObject.optInt("page");
         this.rows = jsonObject.optInt("rows");
         this.sort = jsonObject.optInt("sort");
+        this.order_status = jsonObject.optInt("order_status");
         this.subid = jsonObject.optString("subid");
 
 
@@ -67,6 +70,7 @@ public class homeRequest extends SugarRecord implements Serializable {
         localItemObject.put("uid", uid);
         localItemObject.put("page", page);
         localItemObject.put("sort", sort);
+        localItemObject.put("order_status", order_status);
         localItemObject.put("rows", UriHelper.getInstance().PAGE_LIMIT);
         localItemObject.put("subid", subid);
 

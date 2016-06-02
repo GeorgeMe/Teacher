@@ -14,10 +14,6 @@ import com.dmd.pay.entity.PayInfo;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
 
 /**
  * Created by Administrator on 2016/4/12.
@@ -29,24 +25,26 @@ public class Alipay {
     // 商户收款账号
     public static final String SELLER = "656923138@qq.com";
     // 商户私钥，pkcs8格式
-    public static final String RSA_PRIVATE = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANjOHdsVgS+QGyIf" +
-            "h0SLjazkCqq6nqzkIUtaogMwq8uWRXnpa0jepQ4fm2mkOq1Dxy9gx3P0Y0uAMXTS" +
-            "vkC0TY9qby4yMaPQPA33OIn9Cv/XoMLQWiLRyKijmvQpy6r1riT2ShE3BWVjWgy8" +
-            "2quiB7B4W9pjNRGe3qHoaCzLY0rxAgMBAAECgYBiDm8wbHx+T5YGC+55EQkl3gn5" +
-            "B+jGV3O7iiVmffflX3TS28CbN5+9UIxQ7mdfgB0xj3sGNc1HE5bKuJo115aP5qZ5" +
-            "WpxEy+I1iblZwT36tZ1dLdhDCtt3LjKbBj33enH7r+9HoZq0OHD6az92hKUlcAhE" +
-            "UnqIpBux5qP/QJe2lQJBAPLK7eDL5lVZm2ZzJj5QKyH++yGe8iEJVjr9qY+JtUMw" +
-            "sBln1T0eW5JsjvNmX1MO12RxhboRJNT/Nzl0sVhtd0MCQQDkmUqPclZqySWjngT8" +
-            "oZhMpM38SyFTIUL4Gy2GL6KXazBSovc2Pn60KnNGLXzn+4QXXStubexMo0vzgFj1" +
-            "Ks+7AkAMcag1kF3S3A/h9V7tbLB5QpdehsYEOXVI+r1ZFQbMVc+AzdiZFFg/Lf85" +
-            "rHKQUD9r74GaIszPefE7qaZ5UMr/AkAkcnBZ2KAAnJt8r8gZw2X16lzROeVRTL9R" +
-            "sXubpmKlA7kLo+IIawRmk1IXwU7l6csQspEnJS2EtpB4fWExjabbAkEAp6aHMfgv" +
-            "zSWv26CdKz/x/ZO9wusKnAn86ZLQPCeMcN/pYITkZZ1mK48R+NVlccC7M3taFXM+" +
-            "N+Qb6R91AV+GvA==";
+    public static final String RSA_PRIVATE = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBAKniUeAPz8RcnwgA" +
+            "rEXkVmAcRUfXn4blR5XISPJUobgnPAwjRJIflaoA+jAsKMgHwlHuWpiHq17hvOh6" +
+            "Y5yzGBu30ADxcsZZFkUVAdE6kXHIzZRbFbfzUDzdPBNoYwIgIFjZo38IT5uLsuIa" +
+            "5SrXy6xf6tzu3119VFOkG8ZkFQJzAgMBAAECgYEAppY4pVe77BjLFaTbSboL/Tkb" +
+            "ssQ9OaFRng4FgiP9ZUCMAHcBAa0ZLNjCfUSARQ5evcrWaeX35RXFEc8aKQnx43tP" +
+            "WsHutZX9zAVzHJMqOvby/7cJFya/SUwb5bwRD8GpjPnIk420WhAMVmKSohN3BRU+" +
+            "WbL/PdndwM0FDVGLDwkCQQDQ5nBdJhF2op6C+fNqp4nArSKtJB4ci8RLs4x+y2sM" +
+            "ioMC3RCY7k+7y/e4KQT3ilmQiogyDpvol3ukO4CnYam9AkEA0C/muLHv9g6a4cCJ" +
+            "psrxK1As/ufBxzjaV5GL2SIT0jLk+Za5PHmn/SUj41CBzpR5FiZGjxK2MRV5XkYW" +
+            "55bn7wJBAJ8vOmiA3cXdXZTJCyg2ys28ITR21UtDZi2ZgHIOaGCCHBtOgZtH3hJo" +
+            "9zeqalKHZoCyT951K3EuHdWkUgE6drECQEm4XKQUZlukSlYcnuHQRVxIFNbi7GyG" +
+            "hlKx+GqYNZqeaRS0ub1fewwaJb4t2Pl0+/fK7/tj7d4ts3+dpCi3+EMCQQCIz6uq" +
+            "/EXRtNALhe9bcAXG9Mc0dkoabO+y625unEG/7V6L6JZ8SD2zxVVS+h/v7u80BlTu" +
+            "cr5FzLk1Ixnq9yYU";
     // 支付宝公钥
-    public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkr" +
-            "IvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1" +
-            "efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB";
+    public static final String RSA_PUBLIC = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCp4lHgD8/EXJ8IAKxF5FZgHEVH" +
+            "15+G5UeVyEjyVKG4JzwMI0SSH5WqAPowLCjIB8JR7lqYh6te4bzoemOcsxgbt9AA" +
+            "8XLGWRZFFQHROpFxyM2UWxW381A83TwTaGMCICBY2aN/CE+bi7LiGuUq18usX+rc" +
+            "7t9dfVRTpBvGZBUCcwIDAQAB";
+
     public static final int SDK_PAY_FLAG = 1;
 
     private Handler mHandler;
@@ -72,7 +70,8 @@ public class Alipay {
     public void pay(PayInfo payinfo) {
         // 订单
         DecimalFormat df = new DecimalFormat("0.00");
-        String orderInfo = getOrderInfo(payinfo.getName(), payinfo.getDesc()+ " ", df.format(payinfo.getPrice() * payinfo.getRate()));
+        this.orderNo=payinfo.getOrder_sn();
+        String orderInfo = getOrderInfo(payinfo.getOrder_sn(),payinfo.getName(), payinfo.getDesc()+ " ", df.format(payinfo.getPrice() * payinfo.getRate()));
         Log.e("Alipay",orderInfo);
         // 对订单做RSA 签名
         String sign = sign(orderInfo);
@@ -120,7 +119,7 @@ public class Alipay {
      * create the order info. 创建订单信息
      *
      */
-    public String getOrderInfo(String subject, String body, String price) {
+    public String getOrderInfo(String out_trade_no,String subject, String body, String price) {
         // 签约合作者身份ID
         String orderInfo = "partner=" + "\"" + PARTNER + "\"";
 
@@ -128,7 +127,7 @@ public class Alipay {
         orderInfo += "&seller_id=" + "\"" + SELLER + "\"";
 
         // 商户网站唯一订单号
-        orderInfo += "&out_trade_no=" + "\"" + getOutTradeNo() + "\"";
+        orderInfo += "&out_trade_no=" + "\"" + out_trade_no + "\"";
 
         // 商品名称
         orderInfo += "&subject=" + "\"" + subject + "\"";
@@ -175,6 +174,7 @@ public class Alipay {
      * get the out_trade_no for an order. 生成商户订单号，该值在商户端应保持唯一（可自定义格式规范）
      *
      */
+/*
     public String getOutTradeNo() {
         SimpleDateFormat format = new SimpleDateFormat("MMddHHmmss", Locale.getDefault());
         Date date = new Date();
@@ -187,6 +187,7 @@ public class Alipay {
         this.orderNo = key;
         return key;
     }
+*/
 
     /**
      * 获取已经生产的订单编号

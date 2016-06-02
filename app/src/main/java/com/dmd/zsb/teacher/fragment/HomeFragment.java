@@ -8,7 +8,6 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
@@ -19,7 +18,6 @@ import com.dmd.tutor.adapter.ListViewDataAdapter;
 import com.dmd.tutor.adapter.ViewHolderBase;
 import com.dmd.tutor.adapter.ViewHolderCreator;
 import com.dmd.tutor.eventbus.EventCenter;
-import com.dmd.tutor.lbs.LocationManager;
 import com.dmd.tutor.netstatus.NetUtils;
 import com.dmd.tutor.rollviewpager.RollPagerView;
 import com.dmd.tutor.utils.XmlDB;
@@ -29,9 +27,9 @@ import com.dmd.zsb.common.Constants;
 import com.dmd.zsb.mvp.presenter.impl.HomePresenterImpl;
 import com.dmd.zsb.mvp.view.HomeView;
 import com.dmd.zsb.protocol.response.homeResponse;
+import com.dmd.zsb.protocol.table.DemandsBean;
 import com.dmd.zsb.protocol.table.GradesBean;
 import com.dmd.zsb.protocol.table.SubjectsBean;
-import com.dmd.zsb.protocol.table.UsersBean;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.ReleaseOrderActivity;
 import com.dmd.zsb.teacher.activity.UserDetailActivity;
@@ -43,7 +41,6 @@ import com.dmd.zsb.teacher.adapter.SeekSubjectAdapter;
 import com.dmd.zsb.utils.UriHelper;
 import com.dmd.zsb.widgets.LoadMoreListView;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +68,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
 
     private View mHeaderView;
     private RollPagerView mRollPagerView;
-    private ListViewDataAdapter<UsersBean> mListViewAdapter;
+    private ListViewDataAdapter<DemandsBean> mListViewAdapter;
     private int page = 1;
     private int sort = 0;
     private String subid = "";
@@ -152,6 +149,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                             jsonObject.put("page", 1);//页码
                             jsonObject.put("subid", subid);//科目id
                             jsonObject.put("sort", sort);//科目id
+                            jsonObject.put("order_status", 0);//科目id
                         } catch (JSONException j) {
 
                         }
@@ -175,6 +173,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                         jsonObject.put("page", 1);//页码
                         jsonObject.put("subid", subid);//科目id
                         jsonObject.put("sort", sort);//科目id
+                        jsonObject.put("order_status", 0);
                     } catch (JSONException j) {
 
                     }
@@ -197,41 +196,45 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
         });
         mHeaderView = LayoutInflater.from(mContext).inflate(R.layout.tutor_home_list_header, null);
         mRollPagerView = (RollPagerView) ButterKnife.findById(mHeaderView, R.id.fragment_home_list_header_roll_view_pager);
-        mListViewAdapter = new ListViewDataAdapter<UsersBean>(new ViewHolderCreator<UsersBean>() {
+        mListViewAdapter = new ListViewDataAdapter<DemandsBean>(new ViewHolderCreator<DemandsBean>() {
 
             @Override
-            public ViewHolderBase<UsersBean> createViewHolder(int position) {
-                return new ViewHolderBase<UsersBean>() {
-                    ImageView teacher_avatar;
-                    TextView teacher_name,
-                            teacher_gender,
-                            teacher_signature,
-                            teacher_total_hours,
-                            teacher_goodrate,
-                            teacher_distance;
+            public ViewHolderBase<DemandsBean> createViewHolder(int position) {
+                return new ViewHolderBase<DemandsBean>() {
+                    TextView tv_oid,
+                            tv_pid,
+                            tv_location,
+                            tv_offer_price,
+                            tv_appointment_time,
+                            tv_text,
+                            tv_order_status_demand,
+                            tv_subid;
 
                     @Override
                     public View createView(LayoutInflater layoutInflater) {
-                        View view = layoutInflater.inflate(R.layout.tutor_teacher_list_item, null);
-                        teacher_avatar = ButterKnife.findById(view, R.id.teacher_avatar);
-                        teacher_name = ButterKnife.findById(view, R.id.teacher_name);
-                        teacher_gender = ButterKnife.findById(view, R.id.teacher_gender);
-                        teacher_signature = ButterKnife.findById(view, R.id.teacher_signature);
-                        teacher_total_hours = ButterKnife.findById(view, R.id.teacher_total_hours);
-                        teacher_goodrate = ButterKnife.findById(view, R.id.teacher_goodrate);
-                        teacher_distance = ButterKnife.findById(view, R.id.teacher_distance);
+                        View view = layoutInflater.inflate(R.layout.tutor_demand_list_item, null);
+                        tv_oid = ButterKnife.findById(view, R.id.tv_oid);
+                        tv_pid = ButterKnife.findById(view, R.id.tv_pid);
+                        tv_location = ButterKnife.findById(view, R.id.tv_location);
+                        tv_offer_price = ButterKnife.findById(view, R.id.tv_offer_price);
+                        tv_appointment_time = ButterKnife.findById(view, R.id.tv_appointment_time);
+                        tv_text = ButterKnife.findById(view, R.id.tv_text);
+                        tv_order_status_demand = ButterKnife.findById(view, R.id.tv_order_status_demand);
+                        tv_subid = ButterKnife.findById(view, R.id.tv_subid);
                         return view;
                     }
 
                     @Override
-                    public void showData(int position, UsersBean itemData) {
-                        Picasso.with(mContext).load(itemData.avatar).into(teacher_avatar);
-                        teacher_name.setText(itemData.username);
-                        teacher_gender.setText(itemData.gender);
-                        teacher_signature.setText(itemData.signature);
-                        teacher_total_hours.setText(itemData.total_hours + "");
-                        teacher_goodrate.setText(itemData.goodrate + "");
-                        teacher_distance.setText(LocationManager.getDistance(Double.parseDouble(itemData.lat), Double.parseDouble(itemData.lon)));
+                    public void showData(int position, DemandsBean itemData) {
+                        tv_oid.setText(itemData.oid);
+                        tv_pid.setText(itemData.pid);
+                        tv_location.setText(itemData.location);
+                        tv_offer_price.setText(itemData.offer_price);
+                        tv_appointment_time.setText(itemData.appointment_time);
+                        tv_text.setText(itemData.text);
+                        tv_order_status_demand.setText(itemData.order_status);
+                        tv_subid.setText(itemData.subid);
+                        //teacher_distance.setText(LocationManager.getDistance(Double.parseDouble(itemData.lat), Double.parseDouble(itemData.lon)));
                     }
                 };
             }
@@ -273,10 +276,10 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
 //===============================HomeView============================================
 
     @Override
-    public void navigateToUserDetail(UsersBean itemData) {
+    public void navigateToUserDetail(DemandsBean itemData) {
         if (itemData != null) {
             Bundle bundle = new Bundle();
-            bundle.putString("user", itemData.user_id);
+            bundle.putSerializable("details", itemData);
             readyGo(UserDetailActivity.class, bundle);
         }
     }
@@ -286,7 +289,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
         if (mListViewAdapter != null) {
             int j = position + -1;
             if (j >= 0 && j < mListViewAdapter.getDataList().size()) {
-                UsersBean data = (UsersBean) parent.getItemAtPosition(position);
+                DemandsBean data = (DemandsBean) parent.getItemAtPosition(position);
                 navigateToUserDetail(data);
             }
         }
@@ -297,10 +300,10 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
         if (fragmentHomeListSwipeLayout != null)
             fragmentHomeListSwipeLayout.setRefreshing(false);
         if (response != null) {
-            if (response.users.size() >= 1) {//用户列表
+            if (response.demands.size() >= 1) {//用户列表
                 if (mListViewAdapter != null) {
                     mListViewAdapter.getDataList().clear();
-                    mListViewAdapter.getDataList().addAll(response.users);
+                    mListViewAdapter.getDataList().addAll(response.demands);
                     mListViewAdapter.notifyDataSetChanged();
                 }
             } else {
@@ -326,7 +329,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
             fragmentHomeListView.onLoadMoreComplete();
         if (response != null) {
             if (mListViewAdapter != null) {
-                mListViewAdapter.getDataList().addAll(response.users);
+                mListViewAdapter.getDataList().addAll(response.demands);
                 mListViewAdapter.notifyDataSetChanged();
             }
             if (fragmentHomeListView != null) {
@@ -354,6 +357,8 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
             jsonObject.put("page", page);//页码
             jsonObject.put("subid", subid);//科目id
             jsonObject.put("sort", sort);//科目id
+            jsonObject.put("order_status", 0);
+
         } catch (JSONException j) {
 
         }
@@ -377,6 +382,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
             jsonObject.put("page", 1);//页码
             jsonObject.put("subid", subid);//科目id
             jsonObject.put("sort", sort);//科目id
+            jsonObject.put("order_status", 0);
         } catch (JSONException j) {
 
         }
@@ -416,6 +422,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                         sort = 4;
                     }
                     jsonObject.put("sort", sort);//科目id
+                    jsonObject.put("order_status", 0);
                 } catch (JSONException j) {
 
                 }
@@ -479,6 +486,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                                     jsonObject.put("subid", subid);//科目id
                                     jsonObject.put("sort", sort);//科目id
                                     jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);//每页条数
+                                    jsonObject.put("order_status", 0);
                                 } catch (JSONException j) {
 
                                 }

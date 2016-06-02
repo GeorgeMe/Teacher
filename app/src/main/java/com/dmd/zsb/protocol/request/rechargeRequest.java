@@ -11,29 +11,33 @@ import java.io.Serializable;
 /**
  * Created by Administrator on 2016/5/4.
  */
-public class demandRequest extends SugarRecord implements Serializable {
+public class rechargeRequest extends SugarRecord implements Serializable {
 
     public String   appkey;
     public String version;
     public String   sid;
     public String   uid;
-    public String   page;
-    public String   rows;
-    public int   order_status;
-    public int  sort;
-    public demandRequest() {
+
+    public String body;//商品描述
+    public String discount;//折扣
+    public String voucher;//代金券额度
+    public String price;//商品单价
+    public String subject;//商品名称
+
+    public rechargeRequest() {
         super();
     }
 
-    public demandRequest(String appkey, String version, String sid, String uid, String page, String rows, int   order_status,int  sort) {
+    public rechargeRequest(String appkey, String version, String sid, String uid, String body, String discount, String voucher, String price, String subject) {
         this.appkey = appkey;
         this.version = version;
         this.sid = sid;
         this.uid = uid;
-        this.page = page;
-        this.rows = rows;
-        this.order_status = order_status;
-        this.sort = sort;
+        this.body = body;
+        this.discount = discount;
+        this.voucher = voucher;
+        this.price = price;
+        this.subject = subject;
     }
 
     public void  fromJson(JSONObject jsonObject)  throws JSONException {
@@ -47,10 +51,11 @@ public class demandRequest extends SugarRecord implements Serializable {
         this.version = jsonObject.optString("version");
         this.sid = jsonObject.optString("sid");
         this.uid = jsonObject.optString("uid");
-        this.page = jsonObject.optString("page");
-        this.rows = jsonObject.optString("rows");
-        this.order_status = jsonObject.optInt("order_status");
-        this.sort = jsonObject.optInt("sort");
+        this.body = jsonObject.optString("body");
+        this.discount = jsonObject.optString("discount");
+        this.voucher = jsonObject.optString("voucher");
+        this.price = jsonObject.optString("price");
+        this.subject = jsonObject.optString("subject");
 
 
         return ;
@@ -63,10 +68,11 @@ public class demandRequest extends SugarRecord implements Serializable {
         localItemObject.put("version", version);
         localItemObject.put("sid", sid);
         localItemObject.put("uid", uid);
-        localItemObject.put("page", page);
-        localItemObject.put("rows", rows);
-        localItemObject.put("order_status", order_status);
-        localItemObject.put("sort", sort);
+        localItemObject.put("body", body);
+        localItemObject.put("discount", discount);
+        localItemObject.put("voucher", voucher);
+        localItemObject.put("price", price);
+        localItemObject.put("subject", subject);
 
         return localItemObject;
     }

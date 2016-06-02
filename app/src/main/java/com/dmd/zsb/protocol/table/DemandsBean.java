@@ -13,37 +13,38 @@ import java.io.Serializable;
  */
 public class DemandsBean extends SugarRecord implements Serializable {
 
-    public String img_header;//头像
-    public String name;//姓名
-    public String type;//职业类型
-    public String sex;//性别
-    public String appointed_time;//约定时间
-    public String charging;//计费
-    public String curriculum;//课程
-    public String address;//地址
-    public String place;//地点
-    public String mode;//授课方式
-    public String state;//状态
-    public String praise;//好评
+    public String   oid;
+    public String   pid;
+    public String   avatar;
+    public String   signature;
+    public String   mobile;
+    public String   lon;
+    public String   lat;
+    public String   location;
+    public String   offer_price;
+    public String   appointment_time;
+    public String   text;
+    public String   subid;
+    public int   order_status;
 
     public DemandsBean() {
         super();
     }
 
-    public DemandsBean(String img_header, String name, String type, String sex, String appointed_time, String charging, String curriculum, String address, String place, String mode, String state, String praise) {
-        super();
-        this.img_header = img_header;
-        this.name = name;
-        this.type = type;
-        this.sex = sex;
-        this.appointed_time = appointed_time;
-        this.charging = charging;
-        this.curriculum = curriculum;
-        this.address = address;
-        this.place = place;
-        this.mode = mode;
-        this.state = state;
-        this.praise = praise;
+    public DemandsBean(String oid, String pid, String   avatar,String   signature,String mobile, String lon, String lat, String location, String offer_price, String appointment_time, String text, String subid, int order_status) {
+        this.oid = oid;
+        this.pid = pid;
+        this.avatar = avatar;
+        this.signature = signature;
+        this.mobile = mobile;
+        this.lon = lon;
+        this.lat = lat;
+        this.location = location;
+        this.offer_price = offer_price;
+        this.appointment_time = appointment_time;
+        this.text = text;
+        this.subid = subid;
+        this.order_status = order_status;
     }
 
     public void  fromJson(JSONObject jsonObject)  throws JSONException {
@@ -53,18 +54,19 @@ public class DemandsBean extends SugarRecord implements Serializable {
 
         JSONArray subItemArray;
 
-        this.img_header = jsonObject.optString("img_header");
-        this.name = jsonObject.optString("name");
-        this.type = jsonObject.optString("type");
-        this.sex = jsonObject.optString("sex");
-        this.appointed_time = jsonObject.optString("appointed_time");
-        this.charging = jsonObject.optString("charging");
-        this.curriculum = jsonObject.optString("curriculum");
-        this.address = jsonObject.optString("address");
-        this.place = jsonObject.optString("place");
-        this.mode = jsonObject.optString("mode");
-        this.state = jsonObject.optString("state");
-        this.praise = jsonObject.optString("praise");
+        this.oid = jsonObject.optString("oid");
+        this.pid = jsonObject.optString("pid");
+        this.avatar = jsonObject.optString("avatar");
+        this.signature = jsonObject.optString("signature");
+        this.mobile = jsonObject.optString("mobile");
+        this.lon = jsonObject.optString("lon");
+        this.lat = jsonObject.optString("lat");
+        this.location = jsonObject.optString("location");
+        this.offer_price = jsonObject.optString("offer_price");
+        this.appointment_time = jsonObject.optString("appointment_time");
+        this.text = jsonObject.optString("text");
+        this.subid = jsonObject.optString("subid");
+        this.order_status = jsonObject.optInt("order_status");
 
 
         return ;
@@ -74,18 +76,19 @@ public class DemandsBean extends SugarRecord implements Serializable {
         JSONObject localItemObject = new JSONObject();
         JSONArray itemJSONArray = new JSONArray();
 
-        localItemObject.put("img_header", img_header);
-        localItemObject.put("name", name);
-        localItemObject.put("type", type);
-        localItemObject.put("sex", sex);
-        localItemObject.put("appointed_time", appointed_time);
-        localItemObject.put("charging", charging);
-        localItemObject.put("curriculum", curriculum);
-        localItemObject.put("address", address);
-        localItemObject.put("place", place);
-        localItemObject.put("mode", mode);
-        localItemObject.put("state", state);
-        localItemObject.put("praise", praise);
+        localItemObject.put("oid", oid);
+        localItemObject.put("pid", pid);
+        localItemObject.put("avatar", avatar);
+        localItemObject.put("signature", signature);
+        localItemObject.put("mobile", mobile);
+        localItemObject.put("lon", lon);
+        localItemObject.put("lat", lat);
+        localItemObject.put("location", location);
+        localItemObject.put("offer_price", offer_price);
+        localItemObject.put("appointment_time", appointment_time);
+        localItemObject.put("text", text);
+        localItemObject.put("subid", subid);
+        localItemObject.put("order_status", order_status);
 
         return localItemObject;
     }

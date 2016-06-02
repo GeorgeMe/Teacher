@@ -11,29 +11,25 @@ import java.io.Serializable;
 /**
  * Created by Administrator on 2016/5/4.
  */
-public class demandRequest extends SugarRecord implements Serializable {
+public class workdoneOrderRequest extends SugarRecord implements Serializable {
 
     public String   appkey;
     public String version;
     public String   sid;
     public String   uid;
-    public String   page;
-    public String   rows;
-    public int   order_status;
-    public int  sort;
-    public demandRequest() {
+    public String   oid;
+
+    public workdoneOrderRequest() {
         super();
     }
 
-    public demandRequest(String appkey, String version, String sid, String uid, String page, String rows, int   order_status,int  sort) {
+    public workdoneOrderRequest(String appkey, String version, String sid, String uid, String oid) {
+        super();
         this.appkey = appkey;
         this.version = version;
         this.sid = sid;
         this.uid = uid;
-        this.page = page;
-        this.rows = rows;
-        this.order_status = order_status;
-        this.sort = sort;
+        this.oid = oid;
     }
 
     public void  fromJson(JSONObject jsonObject)  throws JSONException {
@@ -47,11 +43,7 @@ public class demandRequest extends SugarRecord implements Serializable {
         this.version = jsonObject.optString("version");
         this.sid = jsonObject.optString("sid");
         this.uid = jsonObject.optString("uid");
-        this.page = jsonObject.optString("page");
-        this.rows = jsonObject.optString("rows");
-        this.order_status = jsonObject.optInt("order_status");
-        this.sort = jsonObject.optInt("sort");
-
+        this.oid = jsonObject.optString("oid");
 
         return ;
     }
@@ -63,10 +55,7 @@ public class demandRequest extends SugarRecord implements Serializable {
         localItemObject.put("version", version);
         localItemObject.put("sid", sid);
         localItemObject.put("uid", uid);
-        localItemObject.put("page", page);
-        localItemObject.put("rows", rows);
-        localItemObject.put("order_status", order_status);
-        localItemObject.put("sort", sort);
+        localItemObject.put("oid", oid);
 
         return localItemObject;
     }

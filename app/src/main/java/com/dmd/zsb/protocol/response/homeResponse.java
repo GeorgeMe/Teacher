@@ -1,7 +1,7 @@
 package com.dmd.zsb.protocol.response;
 
 import com.dmd.zsb.protocol.table.AdvertisementsBean;
-import com.dmd.zsb.protocol.table.UsersBean;
+import com.dmd.zsb.protocol.table.DemandsBean;
 import com.orm.SugarRecord;
 
 import org.json.JSONArray;
@@ -19,19 +19,19 @@ public class homeResponse extends SugarRecord implements Serializable {
     public int errno;
     public String msg;
     public int total_count;
-    public List<UsersBean> users;
+    public List<DemandsBean> demands;
     public List<AdvertisementsBean> advertisements;
 
     public homeResponse() {
         super();
     }
 
-    public homeResponse(int errno, String msg, int total_count, List<UsersBean> users, List<AdvertisementsBean> advertisements) {
+    public homeResponse(int errno, String msg, int total_count, List<DemandsBean> demands, List<AdvertisementsBean> advertisements) {
         super();
         this.errno = errno;
         this.msg = msg;
         this.total_count = total_count;
-        this.users = users;
+        this.demands = demands;
         this.advertisements = advertisements;
     }
 
@@ -47,13 +47,13 @@ public class homeResponse extends SugarRecord implements Serializable {
         this.errno = jsonObject.optInt("errno");
         this.total_count = jsonObject.optInt("total_count");
         this.msg = jsonObject.optString("msg");
-        subItemArray=jsonObject.optJSONArray("users");
+        subItemArray=jsonObject.optJSONArray("demands");
         if(null != subItemArray) {
             for (int i = 0; i < subItemArray.length(); i++) {
                 JSONObject subItemObject = subItemArray.getJSONObject(i);
-                UsersBean subItem = new UsersBean();
+                DemandsBean subItem = new DemandsBean();
                 subItem.fromJson(subItemObject);
-                this.users.add(subItem);
+                this.demands.add(subItem);
             }
         }
         subItemArray3=jsonObject.optJSONArray("advertisements");
@@ -79,13 +79,13 @@ public class homeResponse extends SugarRecord implements Serializable {
         localItemObject.put("total_count", total_count);
         localItemObject.put("msg", msg);
 
-        for(int i =0; i< users.size(); i++)
+        for(int i =0; i< demands.size(); i++)
         {
-            UsersBean itemData =users.get(i);
+            DemandsBean itemData =demands.get(i);
             JSONObject itemJSONObject = itemData.toJson();
             itemJSONArray.put(itemJSONObject);
         }
-        localItemObject.put("users", itemJSONArray);
+        localItemObject.put("demands", itemJSONArray);
 
         for(int i =0; i< advertisements.size(); i++)
         {

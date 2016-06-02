@@ -62,9 +62,8 @@ public class MainActivity extends BaseActivity implements MainView,TabHost.OnTab
     //public static final String TAB_SEEK = "seek";
     public static final String TAB_MINE = "mine";
 
-    private TextView mHomeTab,mMessageTab,mSeekTab,mMineTab,mUnread;
-    private Drawable mHomePressed,mHomeNormal,mMessagePressed,mMessageNormal;
-    private Drawable mSeekPressed,mSeekNormal,mMinePressed,mMineNormal;
+    private TextView mHomeTab,mMessageTab,mMineTab,mUnread;
+    private Drawable mHomePressed,mHomeNormal,mMessagePressed,mMessageNormal,mMinePressed,mMineNormal;
 
     private YWIMKit mIMKit;
     private IYWConversationService mConversationService;
@@ -636,13 +635,6 @@ public class MainActivity extends BaseActivity implements MainView,TabHost.OnTab
         }
         if (mHomeNormal != null) {
             mHomeNormal.setCallback(null);
-        }
-
-        if (mSeekPressed != null) {
-            mSeekPressed.setCallback(null);
-        }
-        if (mSeekNormal != null) {
-            mSeekNormal.setCallback(null);
         }
 
         if (mMinePressed != null) {

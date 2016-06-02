@@ -47,8 +47,15 @@ public class ApiConstants {
 
         public static final String API_ORDER_SAVEORDER = "t_order_saveOrder.action?";//保存订单
         public static final String API_ORDER_CANCEL = "t_order_cancel.action?";//取消订单
+        public static final String API_ORDER_ACCEPT = "t_order_accept.action?";//接受订单
         public static final String API_ORDER_PAY = "t_order_pay.action?";//支付订单
         public static final String API_ORDER_CONFIRMPAY = "p_order_confirmpay.action?";//确认支付
+
+        public static final String API_ORDER_GETORDERINFO = "t_order_getOrderInfo.action?";//获取订单信息
+
+        public static final String API_ORDER_WORKDONE = "t_order_workdone.action?";//完成订单
+        public static final String API_ORDER_GETRECEIVEDORDERS = "t_order_getReceivedOrders.action?";//接受订单列表
+        public static final String API_ORDER_UPDATEORDERSTATUS = "t_order_updateOrderStatus.action?";//修改订单状态
 
     }
 
