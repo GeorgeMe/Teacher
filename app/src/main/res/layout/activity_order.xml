@@ -23,7 +23,7 @@ tools:context=".activity.OrderActivity">
         android:drawableTop="@drawable/radio_button_drawable_top"
         android:drawableBottom="@drawable/radio_button_drawable_bottom"
         android:button="@null"
-        android:text="未付款"
+        android:text="待确认"
         android:gravity="center"
         android:textSize="18sp" />
 
@@ -42,7 +42,7 @@ tools:context=".activity.OrderActivity">
         android:layout_gravity="center"
         android:button="@null"
         android:gravity="center"
-        android:text="已付款"
+        android:text="已确认"
         android:textSize="18sp" />
 </RadioGroup>
 <View

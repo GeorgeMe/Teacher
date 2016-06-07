@@ -21,7 +21,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
     compile project(':tutor')
     compile project(':openimsdk')
     compile 'com.android.support:support-v4:23.2.1'

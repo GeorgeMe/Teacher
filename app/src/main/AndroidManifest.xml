@@ -78,9 +78,6 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait"/>
         <!-- 发布需求 -->
-        <activity android:name="com.dmd.zsb.teacher.activity.ReleaseOrderActivity"
-            android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait"/>
         <!-- 测试 -->
 
         <!-- 教师 -->

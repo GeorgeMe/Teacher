@@ -95,9 +95,9 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                             jsonObject.put("page", page);
                             jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
                             if (myOrderGroupMenuIncomplete.isChecked()) {
-                                jsonObject.put("order_status", 2);
-                            } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
                                 jsonObject.put("order_status", 3);
+                            } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
+                                jsonObject.put("order_status", 4);
                             }
                         }catch (JSONException j){
 
@@ -120,9 +120,9 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                         jsonObject.put("page", page);
                         jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
                         if (myOrderGroupMenuIncomplete.isChecked()) {
-                            jsonObject.put("order_status", 2);
-                        } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
                             jsonObject.put("order_status", 3);
+                        } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
+                            jsonObject.put("order_status", 4);
                         }
                     }catch (JSONException j){
 
@@ -164,10 +164,10 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                         tv_distance.setText(LocationManager.getDistance(Double.parseDouble(itemData.lat), Double.parseDouble(itemData.lon)));
                         tv_location.setText(itemData.location);
                         tv_offer_price.setText(itemData.offer_price);
-                        if (itemData.order_status==2) {
-                            tv_order_status.setText("未付款");
-                        } else if (itemData.order_status==3) {
-                            tv_order_status.setText("已付款");
+                        if (itemData.order_status==3) {
+                            tv_order_status.setText("待确认");
+                        } else if (itemData.order_status==4) {
+                            tv_order_status.setText("已确认");
                         }
                     }
                 };
@@ -289,9 +289,9 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
             jsonObject.put("page", page);
             jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
             if (myOrderGroupMenuIncomplete.isChecked()) {
-                jsonObject.put("order_status", 2);
-            } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
                 jsonObject.put("order_status", 3);
+            } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
+                jsonObject.put("order_status", 4);
             }
         }catch (JSONException j){
 
@@ -311,9 +311,9 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
             jsonObject.put("page", 1);
             jsonObject.put("rows", ApiConstants.Integers.PAGE_LIMIT);
             if (myOrderGroupMenuIncomplete.isChecked()) {
-                jsonObject.put("order_status", 2);
+                jsonObject.put("order_status", 3);
             } else if (myOrderGroupMenuRecentCompleted.isChecked()) {
-                jsonObject.put("order_status",3);
+                jsonObject.put("order_status",4);
             }
         }catch (JSONException j){
 
@@ -337,7 +337,7 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                     incomplete.put("version", Constants.ZSBVERSION);
                     incomplete.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                     incomplete.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                    incomplete.put("order_status", 2);
+                    incomplete.put("order_status", 3);
                     incomplete.put("page", 1);
                     incomplete.put("rows", ApiConstants.Integers.PAGE_LIMIT);
                 }catch (JSONException j){
@@ -354,7 +354,7 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
                     recent_completed.put("version", Constants.ZSBVERSION);
                     recent_completed.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
                     recent_completed.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
-                    recent_completed.put("order_status", 3);
+                    recent_completed.put("order_status", 4);
                     recent_completed.put("page", 1);
                     recent_completed.put("rows", ApiConstants.Integers.PAGE_LIMIT);
                 }catch (JSONException j){

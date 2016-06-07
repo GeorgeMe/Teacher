@@ -13,7 +13,6 @@ public class ApiConstants {
         public static final String API_USER_SIGNOUT = "t_user_signout.action?";//退出
 
         public static final String API_USER_HOME = "t_user_home.action?";//主页
-        public static final String API_USER_FINDTEACHER = "t_user_findteacher.action?";//找老师
         public static final String API_USER_MINE = "t_user_mine.action?";//我的
         public static final String API_USER_USERDETAIL = "t_user_userdetail.action?";//老师详情
 
@@ -40,22 +39,15 @@ public class ApiConstants {
         public static final String API_USER_CHANGEPASSWORD = "t_user_changepassword.action?";//修改密码
         public static final String API_USER_CHANGESIGNATURE= "t_user_changesignature.action?";//修改签名
         public static final String API_USER_CHANGENICKNAME = "t_user_changenickname.action?";//修改昵称
+        public static final String API_USER_FEEDBACK = "p_user_feedback.action?";//反馈
 
         public static final String API_USER_CERTIFY = "t_user_certify.action?";//认证
         public static final String API_USER_LOGFILE = "t_user_logFile.action?";//上传日志
-        public static final String API_USER_FEEDBACK = "p_user_feedback.action?";//反馈
 
-        public static final String API_ORDER_SAVEORDER = "t_order_saveOrder.action?";//保存订单
         public static final String API_ORDER_CANCEL = "t_order_cancel.action?";//取消订单
         public static final String API_ORDER_ACCEPT = "t_order_accept.action?";//接受订单
-        public static final String API_ORDER_PAY = "t_order_pay.action?";//支付订单
-        public static final String API_ORDER_CONFIRMPAY = "p_order_confirmpay.action?";//确认支付
-
-        public static final String API_ORDER_GETORDERINFO = "t_order_getOrderInfo.action?";//获取订单信息
-
         public static final String API_ORDER_WORKDONE = "t_order_workdone.action?";//完成订单
-        public static final String API_ORDER_GETRECEIVEDORDERS = "t_order_getReceivedOrders.action?";//接受订单列表
-        public static final String API_ORDER_UPDATEORDERSTATUS = "t_order_updateOrderStatus.action?";//修改订单状态
+        public static final String API_ORDER_CONFIRMPAY = "p_order_confirmpay.action?";//确认支付
 
     }
 

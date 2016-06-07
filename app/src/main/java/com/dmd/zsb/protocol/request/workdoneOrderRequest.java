@@ -18,18 +18,19 @@ public class workdoneOrderRequest extends SugarRecord implements Serializable {
     public String   sid;
     public String   uid;
     public String   oid;
-
+    public int   order_status;
     public workdoneOrderRequest() {
         super();
     }
 
-    public workdoneOrderRequest(String appkey, String version, String sid, String uid, String oid) {
+    public workdoneOrderRequest(String appkey, String version, String sid, String uid, String oid,int order_status) {
         super();
         this.appkey = appkey;
         this.version = version;
         this.sid = sid;
         this.uid = uid;
         this.oid = oid;
+        this.order_status = order_status;
     }
 
     public void  fromJson(JSONObject jsonObject)  throws JSONException {
@@ -44,6 +45,7 @@ public class workdoneOrderRequest extends SugarRecord implements Serializable {
         this.sid = jsonObject.optString("sid");
         this.uid = jsonObject.optString("uid");
         this.oid = jsonObject.optString("oid");
+        this.order_status = jsonObject.optInt("order_status");
 
         return ;
     }
@@ -56,6 +58,7 @@ public class workdoneOrderRequest extends SugarRecord implements Serializable {
         localItemObject.put("sid", sid);
         localItemObject.put("uid", uid);
         localItemObject.put("oid", oid);
+        localItemObject.put("order_status", order_status);
 
         return localItemObject;
     }

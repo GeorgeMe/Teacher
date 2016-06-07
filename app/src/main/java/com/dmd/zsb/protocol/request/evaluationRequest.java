@@ -19,13 +19,13 @@ public class evaluationRequest extends SugarRecord implements Serializable {
     public String   uid;
     public String   page;
     public String   rows;
-    public int   flag;
+    public int   status;
 
     public evaluationRequest() {
         super();
     }
 
-    public evaluationRequest(String appkey, String version, String sid, String uid, String page, String rows, int flag) {
+    public evaluationRequest(String appkey, String version, String sid, String uid, String page, String rows, int status) {
         super();
         this.appkey = appkey;
         this.version = version;
@@ -33,7 +33,7 @@ public class evaluationRequest extends SugarRecord implements Serializable {
         this.uid = uid;
         this.page = page;
         this.rows = rows;
-        this.flag = flag;
+        this.status = status;
     }
 
     public void  fromJson(JSONObject jsonObject)  throws JSONException {
@@ -49,7 +49,7 @@ public class evaluationRequest extends SugarRecord implements Serializable {
         this.uid = jsonObject.optString("uid");
         this.page = jsonObject.optString("page");
         this.rows = jsonObject.optString("rows");
-        this.flag = jsonObject.optInt("flag");
+        this.status = jsonObject.optInt("status");
 
         return ;
     }
@@ -63,7 +63,7 @@ public class evaluationRequest extends SugarRecord implements Serializable {
         localItemObject.put("uid", uid);
         localItemObject.put("page", page);
         localItemObject.put("rows", rows);
-        localItemObject.put("flag", flag);
+        localItemObject.put("status", status);
         return localItemObject;
     }
 }

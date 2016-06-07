@@ -31,7 +31,6 @@ import com.dmd.zsb.protocol.table.DemandsBean;
 import com.dmd.zsb.protocol.table.GradesBean;
 import com.dmd.zsb.protocol.table.SubjectsBean;
 import com.dmd.zsb.teacher.R;
-import com.dmd.zsb.teacher.activity.ReleaseOrderActivity;
 import com.dmd.zsb.teacher.activity.UserDetailActivity;
 import com.dmd.zsb.teacher.activity.base.BaseFragment;
 import com.dmd.zsb.teacher.adapter.HomeCarouselAdapter;
@@ -184,16 +183,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
         }
 
         barHomeAddress.setText(XmlDB.getInstance(mContext).getKeyString("BDLocation", "定位"));
-        barHomeDemand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin", false)) {
-                    readyGo(ReleaseOrderActivity.class);
-                } else {
-                    showToast("请登录后发布需求");
-                }
-            }
-        });
+
         mHeaderView = LayoutInflater.from(mContext).inflate(R.layout.tutor_home_list_header, null);
         mRollPagerView = (RollPagerView) ButterKnife.findById(mHeaderView, R.id.fragment_home_list_header_roll_view_pager);
         mListViewAdapter = new ListViewDataAdapter<DemandsBean>(new ViewHolderCreator<DemandsBean>() {
@@ -207,7 +197,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                             tv_offer_price,
                             tv_appointment_time,
                             tv_text,
-                            tv_order_status_demand,
+                            tv_order_status,
                             tv_subid;
 
                     @Override
@@ -219,7 +209,7 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                         tv_offer_price = ButterKnife.findById(view, R.id.tv_offer_price);
                         tv_appointment_time = ButterKnife.findById(view, R.id.tv_appointment_time);
                         tv_text = ButterKnife.findById(view, R.id.tv_text);
-                        tv_order_status_demand = ButterKnife.findById(view, R.id.tv_order_status_demand);
+                        tv_order_status = ButterKnife.findById(view, R.id.tv_order_status);
                         tv_subid = ButterKnife.findById(view, R.id.tv_subid);
                         return view;
                     }
@@ -232,7 +222,22 @@ public class HomeFragment extends BaseFragment implements HomeView, LoadMoreList
                         tv_offer_price.setText(itemData.offer_price);
                         tv_appointment_time.setText(itemData.appointment_time);
                         tv_text.setText(itemData.text);
-                        tv_order_status_demand.setText(itemData.order_status);
+                        if (itemData.order_status==0){
+                            tv_order_status.setText("征集中");
+                        }else if (itemData.order_status==1){
+                            tv_order_status.setText("");
+                        }else if (itemData.order_status==2){
+                            tv_order_status.setText("");
+                        }else if (itemData.order_status==3){
+                            tv_order_status.setText("");
+                        }else if (itemData.order_status==4){
+                            tv_order_status.setText("");
+                        }else if (itemData.order_status==5){
+                            tv_order_status.setText("");
+                        }else if (itemData.order_status==6){
+                            tv_order_status.setText("");
+                        }
+
                         tv_subid.setText(itemData.subid);
                         //teacher_distance.setText(LocationManager.getDistance(Double.parseDouble(itemData.lat), Double.parseDouble(itemData.lon)));
                     }

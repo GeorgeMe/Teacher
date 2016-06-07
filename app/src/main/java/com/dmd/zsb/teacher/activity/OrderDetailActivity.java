@@ -84,11 +84,12 @@ public class OrderDetailActivity extends BaseActivity implements ConfirmPayView 
         tvOfferPrice.setText(data.offer_price);
         tvReceiverId.setText(data.receiver_id);
         tvDistance.setText(LocationManager.getDistance(Double.parseDouble(data.lat), Double.parseDouble(data.lon)));
-        if (data.order_status==2) {
-            tvOrderStatus.setText("未付款");
-        } else if (data.order_status==3) {
-            tvOrderStatus.setText("已付款");
+        if (data.order_status==3) {
+            tvOrderStatus.setText("待确认");
+        } else if (data.order_status==4) {
+            tvOrderStatus.setText("已确认");
         }
+        btnConfirmPay.setVisibility(View.GONE);
     }
 
     @Override

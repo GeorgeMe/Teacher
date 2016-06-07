@@ -140,6 +140,7 @@ public class RechargeActivity extends BaseActivity implements RechargeView {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode==110){
             if (resultCode==111) {
+                setResult(10001);
                 if (data.getIntExtra("resultStatus",1000)==9000){
                     showToast("充值成功");
                     finish();

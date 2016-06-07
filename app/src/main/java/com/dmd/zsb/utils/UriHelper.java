@@ -15,7 +15,7 @@ public class UriHelper {
 
     private static volatile UriHelper instance = null;
     //true开发者模式  false 正式环境
-    private static boolean development=true;
+    private static boolean development=false;
     /**
      * 20 datas per page
      */
@@ -94,10 +94,6 @@ public class UriHelper {
     //首页
     public String home(JSONObject json){
         return urlToString(true,ApiConstants.Urls.API_USER_HOME,json);
-    }
-    //找老师
-    public String findteacher(JSONObject json){
-        return urlToString(true,ApiConstants.Urls.API_USER_FINDTEACHER,json);
     }
     //我的
     public String mine(JSONObject json){
@@ -204,11 +200,6 @@ public class UriHelper {
         return urlToString(true,ApiConstants.Urls.API_USER_CERTIFY,json);
     }
 
-
-    //保存订单信息
-    public String saveOrder(JSONObject json){
-        return urlToString(true,ApiConstants.Urls.API_ORDER_SAVEORDER,json);
-    }
     //取消订单
     public String cancelOrder(JSONObject json){
         return urlToString(true,ApiConstants.Urls.API_ORDER_CANCEL,json);
@@ -217,33 +208,14 @@ public class UriHelper {
     public String acceptOrder(JSONObject json){
         return urlToString(true,ApiConstants.Urls.API_ORDER_ACCEPT,json);
     }
-    //支付订单
-    public String payOrder(JSONObject json){
-        return urlToString(true,ApiConstants.Urls.API_ORDER_PAY,json);
-    }
     //确认支付
     public String confirmpay(JSONObject json){
         return urlToString(true,ApiConstants.Urls.API_ORDER_CONFIRMPAY,json);
     }
 
-    //订单信息
-    public String getOrderInfo(JSONObject json){
-        return urlToString(true,ApiConstants.Urls.API_ORDER_GETORDERINFO,json);
-    }
-
-
     //完成订单
     public String workdone(JSONObject json){
         return urlToString(true,ApiConstants.Urls.API_ORDER_WORKDONE,json);
-    }
-
-    //接受订单列表
-    public String getReceivedOrders(JSONObject json){
-        return urlToString(true,ApiConstants.Urls.API_ORDER_GETRECEIVEDORDERS,json);
-    }
-    //修改订单状态
-    public String updateOrderStatus(JSONObject json){
-        return urlToString(true,ApiConstants.Urls.API_ORDER_UPDATEORDERSTATUS,json);
     }
 
 }
