@@ -42,14 +42,11 @@ public class SignUpPresenterImpl implements SignUpPresenter,BaseSingleLoadedList
     @Override
     public void onSuccess(signupResponse response) {
         signUpView.hideLoading();
-/*        if (data.optString("msg").equals("fail")){
+        if (response.msg.equals("fail")){
             onError("登录失败");
         }else {
-            XmlDB.getInstance(mContext).saveKey("uid",data.optString("id"));
-            XmlDB.getInstance(mContext).saveKey("sid",data.optString("sid"));
-            XmlDB.getInstance(mContext).saveKey("isLogin", true);
-            signUpView.navigateToHome();
-        }*/
+            signUpView.navigateToHome(response);
+        }
     }
 
     @Override

@@ -375,9 +375,8 @@ public class SettingActivity extends BaseActivity implements ChangeAvatarView,Si
                 Uri selectedImage = data.getData();
                 mImagePath = startPhotoZoom(selectedImage);
             } else if (requestCode == REQUEST_PHOTOZOOM) {
-                File f = new File(mImagePath);
-                if (f.exists()) {
-                    File file = new File(ImageUtil.zoomImage(mImagePath, 350));
+                File file = new File(ImageUtil.zoomImage(mImagePath, 350));
+                if (file.exists()) {
                     JSONObject jsonObject=new JSONObject();
                     JSONObject formFile=new JSONObject();
                     try {

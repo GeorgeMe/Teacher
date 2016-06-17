@@ -1,6 +1,5 @@
 package com.dmd.zsb.protocol.response;
 
-import com.dmd.zsb.protocol.table.UsersBean;
 import com.orm.SugarRecord;
 
 import org.json.JSONArray;
@@ -12,25 +11,19 @@ import java.io.Serializable;
 /**
  * Created by Administrator on 2016/5/4.
  */
-public class signupResponse extends SugarRecord implements Serializable {
+public class attestationResponse extends SugarRecord implements Serializable {
 
-    public String   sid;
-    public String   uid;
     public int errno;
     public String msg;
-    public UsersBean user;
 
-    public signupResponse() {
+    public attestationResponse() {
         super();
     }
 
-    public signupResponse(String sid, String uid, int errno, String msg, UsersBean user) {
+    public attestationResponse(int errno, String msg) {
         super();
-        this.sid = sid;
-        this.uid = uid;
         this.errno = errno;
         this.msg = msg;
-        this.user = user;
     }
 
     public void  fromJson(JSONObject jsonObject)  throws JSONException {
@@ -40,26 +33,19 @@ public class signupResponse extends SugarRecord implements Serializable {
 
         JSONArray subItemArray;
 
-        this.sid = jsonObject.optString("sid");
-        this.uid = jsonObject.optString("uid");
         this.errno = jsonObject.optInt("errno");
         this.msg = jsonObject.optString("msg");
-        UsersBean user=new UsersBean();
-        user.fromJson(jsonObject.optJSONObject("user"));
-        this.user=user;
+
+
         return ;
     }
     public JSONObject  toJson() throws JSONException{
         JSONObject localItemObject = new JSONObject();
         JSONArray itemJSONArray = new JSONArray();
 
-        localItemObject.put("sid", sid);
-        localItemObject.put("uid", uid);
         localItemObject.put("errno", errno);
         localItemObject.put("msg", msg);
-        if (user!=null){
-            localItemObject.put("user",user.toJson());
-        }
+
         return localItemObject;
     }
 }

@@ -18,7 +18,6 @@
             android:id="@+id/img_top_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:scaleType="fitXY"
             android:src="@drawable/user_large_img_001" />
 
@@ -174,14 +173,13 @@
             android:paddingTop="10dp"
             android:text="我的交易请求" />
 
-        <View android:visibility="gone"
+        <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/app_line_view_bg" />
 
         <TextView
-            android:visibility="gone"
-            android:id="@+id/mine_vouchers"
+            android:id="@+id/mine_attestation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableRight="@drawable/list_telescopic_more"
@@ -189,7 +187,7 @@
             android:paddingLeft="55dp"
             android:paddingRight="22dp"
             android:paddingTop="10dp"
-            android:text="我的代金券" />
+            android:text="我的认证" />
     </LinearLayout>
 
     <LinearLayout

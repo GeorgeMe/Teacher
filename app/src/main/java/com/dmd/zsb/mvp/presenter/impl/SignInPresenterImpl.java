@@ -32,9 +32,7 @@ public class SignInPresenterImpl implements SignInPresenter,BaseSingleLoadedList
     public void onSuccess(signinResponse response) {
         signInView.hideLoading();
         if (response.errno==0){
-            XmlDB.getInstance(mContext).saveKey("uid",response.uid);
-            XmlDB.getInstance(mContext).saveKey("sid",response.sid);
-            signInView.navigateToHome();
+            signInView.navigateToHome(response);
         }else {
             onError("登录失败");
         }

@@ -21,12 +21,12 @@ public class EvaluationsBean  extends SugarRecord implements Serializable {
     public String text;
     public String content;
     public String rank;
-
+    public String status;
     public EvaluationsBean() {
         super();
     }
 
-    public EvaluationsBean(String teacher, String parent, String appointed_time, String offer_price, String subject, String text, String content, String rank) {
+    public EvaluationsBean(String teacher, String parent, String appointed_time, String offer_price, String subject, String text, String content, String rank,String status) {
         this.teacher = teacher;
         this.parent = parent;
         this.appointed_time = appointed_time;
@@ -35,6 +35,7 @@ public class EvaluationsBean  extends SugarRecord implements Serializable {
         this.text = text;
         this.content = content;
         this.rank = rank;
+        this.status = status;
     }
 
     public void  fromJson(JSONObject jsonObject)  throws JSONException
@@ -53,6 +54,7 @@ public class EvaluationsBean  extends SugarRecord implements Serializable {
         this.text = jsonObject.optString("text");
         this.content = jsonObject.optString("content");
         this.rank = jsonObject.optString("rank");
+        this.status = jsonObject.optString("status");
         return ;
     }
 
@@ -68,6 +70,7 @@ public class EvaluationsBean  extends SugarRecord implements Serializable {
         localItemObject.put("text", text);
         localItemObject.put("content", content);
         localItemObject.put("rank", rank);
+        localItemObject.put("status", status);
         return localItemObject;
     }
 }

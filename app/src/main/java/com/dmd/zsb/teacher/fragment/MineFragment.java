@@ -12,21 +12,22 @@ import com.dmd.tutor.eventbus.EventCenter;
 import com.dmd.tutor.utils.XmlDB;
 import com.dmd.zsb.mvp.presenter.impl.MinePresenterImpl;
 import com.dmd.zsb.mvp.view.MineView;
+import com.dmd.zsb.protocol.response.mineResponse;
 import com.dmd.zsb.teacher.R;
+import com.dmd.zsb.teacher.activity.AttestationActivity;
 import com.dmd.zsb.teacher.activity.DemandActivity;
 import com.dmd.zsb.teacher.activity.EvaluationActivity;
 import com.dmd.zsb.teacher.activity.OrderActivity;
 import com.dmd.zsb.teacher.activity.SettingActivity;
 import com.dmd.zsb.teacher.activity.SignInActivity;
-import com.dmd.zsb.teacher.activity.VouchersActivity;
 import com.dmd.zsb.teacher.activity.WalletActivity;
 import com.dmd.zsb.teacher.activity.base.BaseFragment;
-import com.dmd.zsb.protocol.response.mineResponse;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -45,8 +46,8 @@ public class MineFragment extends BaseFragment implements MineView {
     TextView mineEvaluation;
     @Bind(R.id.mine_demand)
     TextView mineDemand;
-    @Bind(R.id.mine_vouchers)
-    TextView mineVouchers;
+    @Bind(R.id.mine_attestation)
+    TextView mineAttestation;
     @Bind(R.id.mine_about_us)
     TextView mineAboutUs;
     @Bind(R.id.mine_setting)
@@ -103,10 +104,10 @@ public class MineFragment extends BaseFragment implements MineView {
             imgTopBg.setVisibility(View.VISIBLE);
             userAvatar.setVisibility(View.VISIBLE);
             llSignature.setVisibility(View.VISIBLE);
-            if (XmlDB.getInstance(mContext).getKeyBooleanValue("ChangeAvatar", false)){
+            if (XmlDB.getInstance(mContext).getKeyBooleanValue("ChangeAvatar", false)) {
                 minePresenter = new MinePresenterImpl(mContext, this);
                 minePresenter.onMineInfo();
-                XmlDB.getInstance(mContext).saveKey("ChangeAvatar",false);
+                XmlDB.getInstance(mContext).saveKey("ChangeAvatar", false);
             }
         } else {
             tvSignin.setVisibility(View.VISIBLE);
@@ -139,12 +140,12 @@ public class MineFragment extends BaseFragment implements MineView {
     public void setView(mineResponse response) {
         //fragment频繁切换imgTopBg和userAvatar有丢失的可能
         //解决方法  保存fragment状态 保存view
-        if (imgTopBg!=null)
-        Picasso.with(mContext).load(response.user_large_img).into(imgTopBg);
-        if (userAvatar!=null)
-        Picasso.with(mContext).load(response.user_avatar).into(userAvatar);
-        if (tvSignature!=null)
-        tvSignature.setText(response.user_signature);
+        if (imgTopBg != null)
+            Picasso.with(mContext).load(response.user_large_img).into(imgTopBg);
+        if (userAvatar != null)
+            Picasso.with(mContext).load(response.user_avatar).into(userAvatar);
+        if (tvSignature != null)
+            tvSignature.setText(response.user_signature);
     }
 
     @Override
@@ -163,12 +164,12 @@ public class MineFragment extends BaseFragment implements MineView {
 
     }
 
-    @OnClick({R.id.tv_signin, R.id.mine_wallet, R.id.mine_order, R.id.mine_evaluation, R.id.mine_demand, R.id.mine_vouchers, R.id.mine_about_us, R.id.mine_setting})
+    @OnClick({R.id.tv_signin, R.id.mine_wallet, R.id.mine_order, R.id.mine_evaluation, R.id.mine_demand,  R.id.mine_about_us, R.id.mine_setting,R.id.mine_attestation})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_signin:
                 readyGo(SignInActivity.class);
-                ((Activity)mContext).finish();
+                ((Activity) mContext).finish();
                 break;
             case R.id.mine_wallet:
                 if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin", false)) {
@@ -198,13 +199,13 @@ public class MineFragment extends BaseFragment implements MineView {
                     showToast("请先登录");
                 }
                 break;
-            case R.id.mine_vouchers:
+/*            case R.id.mine_vouchers:
                 if (XmlDB.getInstance(mContext).getKeyBooleanValue("isLogin", false)) {
                     readyGo(VouchersActivity.class);
                 } else {
                     showToast("请先登录");
                 }
-                break;
+                break;*/
             case R.id.mine_about_us:
                 Bundle bundle = new Bundle();
                 bundle.putString(BaseWebActivity.BUNDLE_KEY_URL, "http://www.cqdmd.com/TutorClient/about/about.html");
@@ -214,7 +215,17 @@ public class MineFragment extends BaseFragment implements MineView {
             case R.id.mine_setting:
                 readyGo(SettingActivity.class);
                 break;
+            case R.id.mine_attestation:
+                readyGo(AttestationActivity.class);
+                break;
         }
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 
 }

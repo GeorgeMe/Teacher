@@ -1,6 +1,7 @@
 package com.dmd.zsb.teacher.activity;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.dmd.dialog.DialogAction;
+import com.dmd.dialog.MaterialDialog;
 import com.dmd.tutor.adapter.ListViewDataAdapter;
 import com.dmd.tutor.adapter.ViewHolderBase;
 import com.dmd.tutor.adapter.ViewHolderCreator;
@@ -19,12 +22,15 @@ import com.dmd.tutor.utils.XmlDB;
 import com.dmd.tutor.widgets.XSwipeRefreshLayout;
 import com.dmd.zsb.api.ApiConstants;
 import com.dmd.zsb.common.Constants;
+import com.dmd.zsb.mvp.presenter.impl.ConfirmPayPresenterImpl;
 import com.dmd.zsb.mvp.presenter.impl.OrderPresenterImpl;
+import com.dmd.zsb.mvp.view.ConfirmPayView;
 import com.dmd.zsb.mvp.view.OrderView;
-import com.dmd.zsb.teacher.R;
-import com.dmd.zsb.teacher.activity.base.BaseActivity;
+import com.dmd.zsb.protocol.response.confirmpayResponse;
 import com.dmd.zsb.protocol.response.orderResponse;
 import com.dmd.zsb.protocol.table.OrdersBean;
+import com.dmd.zsb.teacher.R;
+import com.dmd.zsb.teacher.activity.base.BaseActivity;
 import com.dmd.zsb.utils.UriHelper;
 import com.dmd.zsb.widgets.LoadMoreListView;
 
@@ -35,7 +41,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class OrderActivity extends BaseActivity implements OrderView, LoadMoreListView.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
+public class OrderActivity extends BaseActivity implements OrderView,ConfirmPayView, LoadMoreListView.OnLoadMoreListener, SwipeRefreshLayout.OnRefreshListener, AdapterView.OnItemClickListener {
 
     @Bind(R.id.my_order_menu_group)
     RadioGroup myOrderMenuGroup;
@@ -53,6 +59,7 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
     TextView topBarTitle;
 
     private OrderPresenterImpl orderPresenter;
+    private ConfirmPayPresenterImpl confirmPayPresenter;
     private ListViewDataAdapter<OrdersBean> mListViewAdapter;
     private int page = 1;
 
@@ -218,12 +225,42 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
     }
 
     @Override
-    public void navigateToOrderDetail(OrdersBean itemData) {
+    public void navigateToOrderDetail(final OrdersBean itemData) {
         if (itemData!=null){
-            Bundle bundle=new Bundle();
+/*            Bundle bundle=new Bundle();
             bundle.putSerializable("data",itemData);
-            readyGo(OrderDetailActivity.class,bundle);
+            readyGo(OrderDetailActivity.class,bundle);*/
+            if(itemData.order_status==3){
+                new MaterialDialog.Builder(mContext).content("确定对方已付款了么吗？").positiveText("确定").negativeText("取消").onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                }).onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        //提交的参数封装
+                        confirmPay(itemData);
+                        dialog.dismiss();
+                    }
+                }).show();
+            }else if (itemData.order_status==4){
+                showToast("该订单已确认付款");
+            }
         }
+    }
+    private void confirmPay(OrdersBean itemData){
+        try{
+            confirmPayPresenter=new ConfirmPayPresenterImpl(mContext,this);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("appkey", Constants.ZSBAPPKEY);
+            jsonObject.put("version", Constants.ZSBVERSION);
+            jsonObject.put("sid", XmlDB.getInstance(mContext).getKeyString("sid", "sid"));
+            jsonObject.put("uid", XmlDB.getInstance(mContext).getKeyString("uid", "uid"));
+            jsonObject.put("oid",itemData.oid);
+            confirmPayPresenter.onConfirmPay(jsonObject);
+        }catch (JSONException j){}
+
     }
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -365,4 +402,19 @@ public class OrderActivity extends BaseActivity implements OrderView, LoadMoreLi
         }
     }
 
+    @Override
+    public void setConfirmPayView(confirmpayResponse response) {
+        if (response.errno==0){
+            showToast(response.offer_price);
+            this.initViewsAndEvents();
+        }else {
+            showToast("订单异常");
+        }
+
+    }
+
+    @Override
+    public void showTip(String msg) {
+
+    }
 }

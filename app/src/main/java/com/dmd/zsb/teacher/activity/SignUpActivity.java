@@ -22,6 +22,7 @@ import com.dmd.zsb.openim.LoginHelper;
 import com.dmd.zsb.openim.Notification;
 import com.dmd.zsb.openim.NotificationInitHelper;
 import com.dmd.zsb.openim.UserProfileHelper;
+import com.dmd.zsb.protocol.response.signupResponse;
 import com.dmd.zsb.teacher.R;
 import com.dmd.zsb.teacher.activity.base.BaseActivity;
 import com.dmd.zsb.widgets.ToastView;
@@ -190,22 +191,25 @@ public class SignUpActivity extends BaseActivity implements SignUpView, View.OnC
     }
 
     @Override
-    public void navigateToHome() {
+    public void navigateToHome(final signupResponse response) {
         LoginHelper.getInstance().login_Sample(mobile, etPassword.getText().toString(), getString(R.string.app_key), new IWxCallback() {
 
             @Override
             public void onSuccess(Object... arg0) {
-                hideLoading();
-                saveIdPasswordToLocal(mobile, etPassword.getText().toString());
-                btnSignupComplete.setClickable(true);
-                Toast.makeText(mContext, "登录成功",Toast.LENGTH_SHORT).show();
+
                 YWLog.i(TAG_LOG, "login success!");
+                hideLoading();
+                Toast.makeText(mContext, "登录成功",Toast.LENGTH_SHORT).show();
+                btnSignupComplete.setClickable(true);
+                saveIdPasswordToLocal(mobile, etPassword.getText().toString());
+                XmlDB.getInstance(mContext).saveKey("uid",response.uid);
+                XmlDB.getInstance(mContext).saveKey("sid",response.sid);
                 XmlDB.getInstance(mContext).saveKey("isLogin", true);
                 Bundle bundle=new Bundle();
                 bundle.putString(MainActivity.LOGIN_SUCCESS,"loginSuccess");
                 readyGo(MainActivity.class,bundle);
                 finish();
-
+                
             }
 
             @Override
